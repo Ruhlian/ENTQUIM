@@ -1,0 +1,132 @@
+
+.featured-product {
+    width: 80%;
+    margin: 100px auto;
+}
+
+.featured-title__container {
+    max-width: 330px;
+    margin: auto;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: #1A729A 1px solid;
+}
+
+.featured__title {
+    font-weight: 400;
+    font-size: 30px;
+}
+
+.featured-products__container  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+}
+
+.featured-product__container {
+    margin-top: 50px;
+    max-width: 500px;
+    max-height: 440px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.featured-product__content {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+.product-content__description {
+    margin: 0;
+    padding: 0;
+}
+
+.featured-product__title-container {
+    padding: 10px;
+    border-bottom: #1A729A 1px solid;
+}
+
+.featured-product__title {
+    font-weight: 300;
+    font-size: 21px;
+    text-align: center;
+}
+
+.product-details__container-left {
+    width: 340px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    text-align: end;
+    margin-top: 30px;
+    gap: 10px;
+}
+
+.order-product__container {
+    text-align: center;
+}
+
+.product-content__image {
+    width: 185px;
+    height: 266px;
+}
+
+.featured-products__list {
+    list-style: none;
+}
+
+.featured-product__container-right {
+    margin-top: 50px;
+    max-width: 500px;
+    max-height: 440px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-content__image-right {
+    width: 180px;
+    height: 270px;
+}
+
+.product-details__container-right {
+    width: 340px;
+    height: 200px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.product-content__title {
+    font-weight: 600;
+}
+
+
+.category-image__featured {
+    width: 45px;
+}
+
+.product-content__button {
+    margin-top: 15px;
+    width: 90px;
+    height: 30px;
+    border-radius: 15px;
+    border: none;
+    background-color: #1A729A;
+    cursor: pointer;
+}
+
+.featured-cart {
+    width: 25px;
+}
+
+.product-content__price {
+    font-weight: 600;
+    font-size: 20px;
+}

@@ -1,0 +1,122 @@
+.contact-image__container {
+    width: 100%;
+    height: 400px;
+    background: linear-gradient(90deg, rgba(26,114,154,1) 24%, rgba(0,0,0,0) 100%), 
+                url(../../assets/images/contact/contacto.jpeg);
+    background-size: cover; 
+    background-position: center; 
+}
+
+.contact-image-titles__container {
+    width: 400px;
+    position: absolute;
+    top: 30%;
+    left: 100px;
+}
+
+.contact-image-title {
+    font-size: 55px;
+    color: #c7effe;
+    font-weight: 400;
+    font-family: "Noto Serif", serif;
+}
+
+.contact-image-subtitle {
+    font-size: 27px;
+    font-weight: 300;
+    color: #fff;
+} 
+
+/* Estilos para el contenedor principal */
+.contact-main__container {
+  padding: 100px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: #f4f6f9;
+}
+
+/* Estilos para el formulario */
+.contact-form__container {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  max-width: 600px; /* Ajustar el ancho para acomodar las columnas */
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dividir en dos columnas iguales */
+  gap: 20px;
+}
+
+/* Estilos para los campos que ocupan 1 columna */
+.contact-form__container .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hacer que el textarea ocupe ambas columnas y aumentar su tamaño horizontal */
+.contact-form__container textarea.contact-input {
+  grid-column: span 2; /* Ocupa dos columnas */
+  resize: none; /* Desactivar el redimensionamiento */
+  width: calc(100% + 20px); /* Aumentar el ancho */
+  margin-left: -10px; /* Alinear el textarea con el contenedor */
+}
+
+/* Estilo para el mensaje de éxito */
+.success-message {
+  color: #52c41a;
+  font-size: 14px;
+  margin-top: 10px;
+  grid-column: span 2; /* Asegura que el mensaje de éxito esté centrado y ocupe ambas columnas */
+}
+
+/* Estilo para los mensajes de error */
+.error-message {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 5px;
+  grid-column: span 2; /* Asegura que el mensaje de error esté centrado y ocupe ambas columnas */
+}
+
+/* Estilos para los labels */
+.contact-form__container label {
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+/* Estilos para los inputs y textarea */
+.contact-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  transition: border-color 0.3s ease;
+}
+
+.contact-input:focus {
+  border-color: #1a729a;
+  outline: none;
+}
+
+/* Estilo para el botón de enviar */
+.contact-submit__btn {
+  padding: 12px;
+  font-size: 16px;
+  color: white;
+  background-color: #1a729a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  grid-column: span 2; /* Hacer que el botón ocupe ambas columnas */
+}
+
+.contact-submit__btn:hover {
+  background-color: #155a7b;
+}

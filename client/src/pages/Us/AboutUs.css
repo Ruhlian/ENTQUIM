@@ -1,0 +1,110 @@
+.about-image__container {
+    width: 100%;
+    height: 400px;
+    background: linear-gradient(90deg, rgba(26,114,154,1) 24%, rgba(0,0,0,0) 100%), 
+                url(../../assets/images/aboutUs/main-about.jpeg);
+    background-size: cover; 
+    background-position: center; 
+}
+
+.about-image-titles__container {
+    width: 400px;
+    position: absolute;
+    top: 30%;
+    left: 100px;
+}
+
+.about-image-title {
+    font-size: 55px;
+    color: #c7effe;
+    font-weight: 400;
+    font-family: "Noto Serif", serif;
+}
+
+.about-image-subtitle {
+    font-size: 27px;
+    font-weight: 300;
+    color: #fff;
+} 
+
+.about__container {
+    width: 70%;
+    height: 100vh;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    flex-direction: column;
+    background: radial-gradient(circle, rgba(26,114,154,0) 0%, rgba(255,255,255,1) 60%),
+                url(../../assets/images/aboutUs/colombia.png);
+    background-size: cover;
+    gap: 25px;
+}
+
+.about-title {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    padding-bottom: 15px;
+    border-bottom: #1A729A 1px solid;
+}
+
+.about-content-one, .about-content-two {
+    font-size: 20px;
+    text-wrap: pretty;
+}
+
+.about-content-one {
+    margin-top: 20px;
+}
+
+.mision-vision__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 0;
+    border: 1px solid #1A729A;
+    width: 80%;
+    height: 85vh;
+    margin: 100px auto;
+}
+
+.mision-vision__item {
+    padding: 20px;
+    font-size: 25px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mision-vision__title {
+    background-color: #1a729a;
+    color: white;
+    font-weight: 300;
+    font-size: 35px;
+    letter-spacing: 3px;
+}
+
+.mision-vision__content {
+    background-color: white;
+    color: #333;
+    text-align: left;
+    font-size: 19px;
+}
+
+.main-phrase__container {
+    width: 80%;
+    height: 50vh;
+    margin: auto;
+    margin-top: 1px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.main-phrase__container p {
+    text-align: center;
+    font-size: 23px;
+    text-wrap: pretty;
+}

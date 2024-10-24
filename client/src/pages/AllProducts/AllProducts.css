@@ -1,0 +1,237 @@
+/* AllProducts.css */
+.allproducts-page {
+    display: flex;
+    background-color: #fff;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas más pequeñas */
+}
+
+.allproducts-filter__container {
+    width: 250px; /* Ancho para la barra lateral */
+    height: 100vh;
+    border-right: 1px solid #14A2C915;
+    padding: 15px;
+    background-color: #f5f6fa;
+    margin-right: 20px; 
+    flex-shrink: 0; /* Evita que la barra lateral se encoja */
+}
+
+.allproducts-filter__title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.allproducts-category__filter,
+.allproducts-price__filter,
+.allproducts-price__manual-filter {
+    margin-bottom: 15px;
+}
+
+.allproducts-category__filter {
+    margin-top: 25px;
+}
+
+.allproducts-category__item,
+.allproducts-price__item {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.allproducts-category__item.active,
+.allproducts-price__item.active {
+    background-color: #14A2C9;
+    color: white;
+}
+
+.allproducts-price__manual-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.allproducts-price__manual-inputs input {
+    width: 45%; /* Mantiene el ancho de los inputs */
+    padding: 6px; /* Reducción del padding */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    appearance: none; /* Quita las flechas de los inputs de número */
+}
+
+.allproducts-price__apply-button {
+    width: 100%;
+    padding: 8px; /* Reducción del padding */
+    background: linear-gradient(135deg, #2d90be, #2d90be); /* Degradado con el nuevo color */
+    color: white;
+    border: none;
+    border-radius: 20px; /* Hacer el botón más redondo */
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px; /* Espacio superior para separar del resto */
+}
+
+.allproducts-price__apply-button:hover {
+    background: linear-gradient(135deg, #1a6a8b, #1a6a8b); /* Degradado más oscuro al pasar el mouse */
+}
+
+.allproducts-products__container {
+    flex-grow: 1; /* Permite que la sección de productos use el espacio restante */
+    display: flex;
+    flex-direction: column; /* Asegura que el contenedor de productos sea una columna */
+}
+
+.allproducts-products__title {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.allproducts-products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Máximo de 4 productos por fila */
+    gap: 15px; /* Espacio entre productos */
+}
+
+.allproducts-category__item input[type="checkbox"],
+.allproducts-price__item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px; /* Tamaño reducido para el círculo */
+    height: 16px; /* Tamaño reducido para el círculo */
+    border-radius: 50%;
+    border: 2px solid #1b1b1b; /* Color del borde del círculo */
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    margin-right: 8px;
+    background: #fff; /* Color de fondo del círculo */
+}
+
+.allproducts-category__item input[type="checkbox"]:checked::before,
+.allproducts-price__item input[type="checkbox"]:checked::before {
+    content: '';
+    width: 9px; /* Tamaño del relleno interior */
+    height: 9px; /* Tamaño del relleno interior */
+    background-color: #000000; /* Color del relleno cuando el checkbox está seleccionado */
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.allproducts-category__item label,
+.allproducts-price__item label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.allproducts-category__item span,
+.allproducts-price__item span {
+    margin-left: 8px;
+    color: #333; /* Color del texto */
+}
+
+/* Estilo para la tarjeta de producto */
+.allproducts-product__card {
+    width: 215px; /* Ancho fijo para que todos los contenedores tengan el mismo tamaño */
+    height: 300px; /* Reducir la altura para mayor compacidad */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px; /* Reducción del padding */
+    text-align: center;
+    background-color: #fff;
+    transition: box-shadow 0.3s;
+    margin: 0 auto; /* Centrar el contenedor */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Asegura que el botón esté al final */
+}
+
+.allproducts-product__card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.allproducts-product__image {
+    width: 100%; /* Mantener el tamaño de la imagen al 100% del contenedor */
+    height: 150px; /* Ajustar la altura de la imagen */
+    border-radius: 5px;
+    object-fit: contain; /* Ajusta la imagen para que no se corte y mantenga su proporción */
+    margin: 0 auto; /* Centrar la imagen */
+}
+
+.allproducts-product__title {
+    font-size: 1.2em; /* Ajustar el tamaño del texto del título */
+    margin: 8px 0; /* Ajuste de margen */
+    flex-grow: 1; /* Asegura que el título no empuje el botón hacia abajo */
+}
+
+.allproducts-product__price {
+    font-size: 1.1em; /* Aumentar el tamaño del precio para destacar */
+    font-weight: bold; /* Hacer el precio en negrita */
+    color: #000000; /* Mantener el color azul */
+    padding: 5px; /* Añadir un poco de padding alrededor del precio */
+    border-radius: 5px; /* Bordes redondeados para suavizar */
+}
+
+.allproducts-add-to-cart__button {
+    width: 100%;
+    padding: 10px; /* Reducción del padding */
+    background: linear-gradient(135deg, #2d90be, #2d90be); /* Degradado con el nuevo color */
+    color: white;
+    border: none;
+    border-radius: 25px; /* Hacer el botón más redondo */
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.allproducts-add-to-cart__button:hover {
+    background: linear-gradient(135deg, #1a6a8b, #1a6a8b); /* Degradado más oscuro al pasar el mouse */
+}
+
+/* Media Queries para hacer la página responsiva */
+@media (max-width: 1200px) {
+    .allproducts-products {
+        grid-template-columns: repeat(3, 1fr); /* 3 productos por fila en pantallas medianas */
+    }
+
+    .allproducts-filter__container {
+        margin-right: 15px; /* Reducir margen en pantallas medianas */
+    }
+}
+
+@media (max-width: 900px) {
+    .allproducts-products {
+        grid-template-columns: repeat(2, 1fr); /* 2 productos por fila en pantallas pequeñas */
+    }
+
+    .allproducts-filter__container {
+        width: 100%; /* Barra lateral ocupa el 100% */
+        margin-right: 0; /* Sin margen en pantallas pequeñas */
+        margin-bottom: 20px; /* Espacio inferior para separar de los productos */
+    }
+}
+
+@media (max-width: 600px) {
+    .allproducts-products {
+        grid-template-columns: 1fr; /* 1 producto por fila en pantallas muy pequeñas */
+    }
+
+    .allproducts-filter__container {
+        padding: 10px; /* Reducir padding en pantallas pequeñas */
+    }
+
+    .allproducts-filter__title {
+        font-size: 1.3em; /* Reducir tamaño del título en pantallas pequeñas */
+    }
+
+    .allproducts-product__title {
+        font-size: 1em; /* Ajustar el tamaño del texto del título en pantallas pequeñas */
+    }
+
+    .allproducts-product__price {
+        font-size: 1em; /* Ajustar el tamaño del precio en pantallas pequeñas */
+    }
+}

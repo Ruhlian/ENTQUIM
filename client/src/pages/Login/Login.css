@@ -1,0 +1,187 @@
+main {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    margin: auto;
+    overflow: hidden; /* Asegura que nada se salga del contenedor */
+}
+
+main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(../../assets/images/Login/main-img.jpg);
+    background-size: cover; /* Cubre todo el contenedor */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita la repetición */
+    background-attachment: fixed; /* Fija la imagen al fondo */
+    filter: blur(5px); /* Aplica el desenfoque solo a la imagen */
+    transform: scale(1.05); /* Escala la imagen para evitar bordes */
+    z-index: -1; /* Envía la imagen al fondo */
+}
+
+
+
+.contenedor__todo {
+    width: 100%;
+    max-width: 850px;
+    margin: auto;
+    margin-top: 80px;
+    position: relative;
+    transition: transform 0.5s ease-in-out;
+    position: relative; 
+    z-index: 1;
+}
+
+/* Transición de la caja al hacer clic en los botones */
+.contenedor__todo.register-view .contenedor__login-register {
+    transform: translateX(400px); /* Ajusta este valor para corregir el desplazamiento */
+}
+
+.caja__trasera {
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    background-color: rgba(18, 162, 201, 0.8);
+    transition: transform 0.5s ease-in-out;
+    border-radius: 20px;
+    box-shadow: #0000000c 10px 10px 10px 5px;
+}
+
+.caja__trasera div {
+    margin: 100px 40px;
+    color: white;
+    transition: all 500ms;
+}
+
+.caja__trasera div p,
+.caja__trasera div button {
+    margin-top: 30px;
+}
+
+.caja__trasera div h3 {
+    font-weight: 400;
+    font-size: 24px;
+}
+
+.caja__trasera button {
+    padding: 10px 40px;
+    border: 2px solid #fff;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 580;
+    cursor: pointer;
+    color: white;
+    outline: none;
+    transition: all 300ms;
+}
+
+.caja__trasera button:hover {
+    background: #fff;
+    color: #46a2fd;
+}
+
+/* Formularios */
+.contenedor__login-register {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 380px;
+    position: relative;
+    top: -210px;
+    left: 0;
+    transition: transform 0.5s ease-in-out;
+    margin-top: 50px;
+}
+
+.formulario__login {
+    min-height: 440px;
+}
+
+.contenedor__login-register form {
+    width: 100%;
+    padding: 50px 30px;
+    background: #fff;
+    position: absolute;
+    border-radius: 5px;
+    box-shadow: #0000001c 10px 10px 5px 5px;
+}
+
+.contenedor__login-register form h2 {
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #46a2fd;
+}
+
+.contenedor__login-register form input {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    background: #f2f2f2;
+    font-size: 16px;
+    outline: none;
+}
+
+.contenedor__login-register form button {
+    padding: 10px 40px;
+    margin-top: 40px;
+    border: none;
+    font-size: 14px;
+    background: #46a2fd;
+    color: white;
+    cursor: pointer;
+    outline: none;
+}
+
+.visibility-icon {
+    width: 24px;
+}
+
+/* Ocultar formulario por defecto */
+.hidden {
+    display: none;
+}
+
+.conditions {
+    font-size: 13px;
+}
+/* Trabajando en el responsive design */
+@media screen and (max-width: 850px) {
+    main {
+        margin-top: 50px;
+    }
+
+    .caja__trasera {
+        max-width: 350px;
+        height: 300px;
+        flex-direction: column;
+        margin: auto;
+    }
+
+    .caja__trasera div {
+        margin: 0px;
+        position: absolute;
+    }
+
+    .contenedor__login-register {
+        top: -10px;
+        left: -5px;
+        margin: auto;
+    }
+
+    .contenedor__login-register form {
+        position: relative;
+    }
+
+    /* Anula la transición en dispositivos móviles para evitar problemas de espacio */
+    .contenedor__todo.register-view .contenedor__login-register {
+        transform: translateX(0);
+    }
+}

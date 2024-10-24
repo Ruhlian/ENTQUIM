@@ -1,0 +1,81 @@
+/* Asegúrate de que el contenedor tenga suficiente espacio alrededor */
+.marketcompes-container {
+    width: 1000px;
+    text-align: center;
+    margin: 50px auto; /* Márgenes superior e inferior para separación */
+    padding: 20px; /* Espaciado interno */
+    position: relative; /* Para posicionar el overlay relativo al contenedor */
+    clear: both; /* Asegura que no se superponga con elementos flotantes */
+}
+
+.market-title__container {
+    margin: auto;
+    max-width: 420px;
+    border-bottom: #1A729A 1px solid;
+    padding-bottom: 15px;
+    margin-bottom: 70px;
+}
+
+.market-title {
+    font-weight: 400;
+    font-size: 25px;
+}
+
+.market-subtitles {
+    position: absolute;
+    font-size: 24px;
+    right: 20px;
+    bottom: 20px;
+    font-weight: 300;
+    z-index: 1000;
+}
+
+.market-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.market-item {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    border-radius: 5px;
+    height: 350px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.market-item:hover {
+    transform: scale(1.05);
+}
+
+.market-link {
+    position: relative;
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    z-index: 2;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 10px;
+}
+
+.market-link span {
+    z-index: 2;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(26,114,154);
+    background: linear-gradient(0deg, rgba(26,114,154,1) 15%, rgba(0,0,0,0) 90%);
+    z-index: 1;
+}

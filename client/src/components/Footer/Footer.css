@@ -1,0 +1,97 @@
+.footer {
+    height: 500px; /* Altura del footer */
+    background-color: #f8f9fa; /* Color de fondo */
+    padding: 40px 60px; /* Espacio interno */
+    display: flex;
+    justify-content: space-between; /* Distribuir los elementos a lo largo del eje horizontal */
+    align-items: flex-start; /* Alinear elementos al inicio del eje vertical */
+    flex-wrap: wrap;
+}
+
+.footer-logos__container {
+    flex: 1; /* Ocupa más espacio */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.main-logo {
+    height: 180px; /* Tamaño ajustado del logo */
+    margin-bottom: 20px;
+}
+
+.secondary-logo {
+    width: 200px;
+}
+
+.footer__socials {
+    display: flex;
+    gap: 15px; /* Espacio entre iconos de redes sociales */
+    justify-content: center;
+}
+
+.footer__socials img {
+    width: 25px; /* Tamaño de los iconos de redes sociales */
+    height: 25px;
+    cursor: pointer;
+}
+
+.footer__content {
+    display: flex;
+}
+
+/* Secciones de enlaces */
+.footer__information,
+.footer__about,
+.footer__contact,
+.footer__suppliers {
+    flex: 1; /* Ocupa el mismo espacio cada columna */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0 20px; /* Espaciado horizontal entre secciones */
+}
+
+.footer__information h3,
+.footer__about h3,
+.footer__contact h3,
+.footer__suppliers h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.footer__information a,
+.footer__about a,
+.footer__contact a {
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.footer__information a:hover,
+.footer__about a:hover,
+.footer__contact a:hover {
+    text-decoration: underline;
+}
+
+.footer__suppliers img {
+    width: 35px; /* Tamaño de las banderas */
+    height: auto;
+    margin-bottom: 10px;
+}
+
+/* Parte inferior de Copyright */
+.footer__copyright {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #dcdcdc; /* Línea separadora */
+}
