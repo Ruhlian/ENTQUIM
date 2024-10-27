@@ -61,7 +61,7 @@ const Home = () => {
                             <div className="featured-product__content">
                                 <div className="product-details__container-left">
                                     <h3 className="product-content__title">DELMETRIN 2.50 E.C</h3>
-                                    <p>Insecticida piretroide líquido Concentrado Emulsionable (EC) a base de Deltametrina al 2.50% p/v, excelente para aplicación de choque y acción inmediata (KNOCK DOWN) sobre todo tipo de insectos rastreros y voladores en todos los ambientes.</p>
+                                    <p>Insecticida piretroide líquido Concentrado Emulsionable (EC) con base de Deltametrina al 2.50% p/v, excelente para aplicación de choque y acción inmediata (KNOCK DOWN) sobre todo tipo de insectos rastreros y voladores en todos los ambientes.</p>
                                 </div>
                                 
                                 <div className="order-product__container">
