@@ -63,8 +63,8 @@ node server.js en una terminal de visual code para correr el backend.
 
 === IMPORTANTE ===
 
-creen dos archivos temporales en el cliente y server, solo dentro de esas dos carpetas iran los ".env", despues de crearlos pegan lo siguiente
-
+(SI NO ESTAN EN SUS CARPTEAS LOS RESPECTIVOS ARCHIVOS)
+creen dos archivos temporales en el cliente y server, dentro de esas dos carpetas iran los ".env", despues de crearlos pegan lo siguiente
 
 ***client***
 REACT_APP_API_URL=http://localhost:3002/api
