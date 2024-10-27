@@ -16,6 +16,7 @@ npm install axios
 npm install react-toastify
 npm install react-icons
 npm install chart.js
+npm install dotenv 
 
 
 TRAER EL REPOSITORIO DE GITHUB (cmd):
@@ -58,3 +59,30 @@ SI EL USUARIO YA ESTA CREADO SE DEBE ELIMINAR Y VOLVER A CREAR PARA QUE HAYA CON
 
 
 node server.js en una terminal de visual code para correr el backend.
+
+
+=== IMPORTANTE ===
+
+creen dos archivos temporales en el cliente y server, solo dentro de esas dos carpetas iran los ".env", despues de crearlos pegan lo siguiente
+
+
+***client***
+REACT_APP_API_URL=http://localhost:3002/api
+FRONTEND_URL=http://localhost:3000
+
+***server***
+DB_HOST=localhost
+DB_USER=adminentquim
+DB_PASSWORD=entquim123
+DB_NAME=dbentquim
+BASE_URL=http://localhost:3002/api
+FRONTEND_URL=http://localhost:3000
+EMAIL_USER=julianospina260@gmail.com
+EMAIL_PASS=iiys rgqb cvsl wrxw
+JWT_SECRET=wWXt5kkgHZK8RuWANTDqTsEKFI2VbNMsBjiJdTZC5fAAWdIwf18jtwwWqOZqdiLs
+
+=== Nota ===
+EMAIL_USER=julianospina260@gmail.com
+EMAIL_PASS=iiys rgqb cvsl wrxw
+
+mas adelante se creara un correo tipo empresa para esto y poder manejar el envio de correos mejor, por ahora es mi correo personal para las pruebas, lo demas son datos sensibles que nunca se subiran por los archivos .env y obviamente tener seguridad

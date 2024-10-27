@@ -135,6 +135,16 @@ CREATE TABLE Ordenes (
     FOREIGN KEY (id_usuarios) REFERENCES usuarios(id_usuarios) ON DELETE SET NULL
 );
 
+-- Crea tabla tokens
+CREATE TABLE tokens_usuarios (
+    id_token INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuarios INT,
+    token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NULL,
+    FOREIGN KEY (id_usuarios) REFERENCES usuarios(id_usuarios)
+);
+
 -- Inserciones en Roles
 
 INSERT INTO Roles (rol) VALUES ('Administrador');

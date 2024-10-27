@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import './Header.css';
 import { Link, useLocation } from 'react-router-dom';
 import Images from '../../utils/Images/Images';
-// import CartModal from '../CartModal/CartModal';
-// import AccountModal from '../AccountModal/AccountModal';
+import AccountModal from '../Modals/AccountModal/AccountModal'; // Descomentar esta línea para importar AccountModal
 
 const Header = () => {
     const [isCartModalOpen, setIsCartModalOpen] = useState(false);
@@ -85,8 +84,8 @@ const Header = () => {
                 </div>
             </div>
 
-            {/* <CartModal isOpen={isCartModalOpen} onClose={toggleCartModal} />
-            <AccountModal isOpen={isAccountModalOpen} onClose={toggleAccountModal} /> */}
+            {/* Aquí descomentamos el AccountModal para hacerlo visible */}
+            <AccountModal isOpen={isAccountModalOpen} onClose={toggleAccountModal} />
         </header>
     );
 }

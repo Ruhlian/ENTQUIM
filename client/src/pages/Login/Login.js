@@ -1,74 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import './Login.css';
-import Images from '../../utils/Images/Images';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { validateCorreo, validateName, validateContrasena } from '../../utils/helpers';
+import { useNavigate, Link } from 'react-router-dom'; // Importa Link
 
 const Login = () => {
     const [isRegisterView, setIsRegisterView] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [correo, setCorreo] = useState('');
+    const [contrasena, setContrasena] = useState('');
     const [name, setName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [passwordVisible, setPasswordVisible] = useState(false); // Estado para mostrar/ocultar la contraseña    const navigate = useNavigate(); // Hook de navegación
-    const [errorMessage, setErrorMessage] = useState(''); // Manejo de errores
+    const [contrasenaVisible, setContrasenaVisible] = useState(false);
+    const { handleLogin, handleRegister, user } = useAuth();
+    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
-    const toggleToRegister = () => {
-        setIsRegisterView(true);
+    useEffect(() => {
+        if (user) {
+            navigate('/'); // Cambia '/' por la ruta a la que quieras redirigir
+        }
+    }, [user, navigate]);
+
+    const toggleView = () => {
+        setIsRegisterView(prev => !prev);
+        setErrorMessage(''); // Limpia el mensaje de error al cambiar de vista
     };
 
-    const toggleToLogin = () => {
-        setIsRegisterView(false);
-    };
-
-    const handleLogin = async (e) => {
+    const handleLoginSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage(''); // Resetear el mensaje de error
-        if (!validateEmail(email)) {
-            setErrorMessage('Por favor, ingresa un correo electrónico válido.');
+        setErrorMessage('');
+    
+        // Validaciones
+        if (!validateCorreo(correo)) {
+            setErrorMessage('Por favor, ingresa un correo electrónico válido (mínimo 15 caracteres y máximo 35).');
             return;
         }
-        if (!validatePassword(password)) {
-            setErrorMessage('La contraseña debe tener al menos 8 caracteres, con letras, números y un símbolo.');
+        if (!validateContrasena(contrasena)) {
+            setErrorMessage('La contraseña debe tener entre 10 y 35 caracteres, con letras, números y al menos un símbolo.');
             return;
         }
+    
+        try {
+            await handleLogin(correo, contrasena);
+        } catch (error) {
+            console.error('Login failed:', error);
+            setErrorMessage(error.message || 'Error al iniciar sesión. Verifica tus credenciales.'); // Usa el mensaje del error
+        }
+    };    
 
-    };
-
-    const handleRegister = async (e) => {
+    const handleRegisterSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage(''); // Resetear el mensaje de error
+        setErrorMessage(''); // Limpia el mensaje de error
 
+        // Validaciones
         if (!validateName(name) || !validateName(lastName)) {
-            setErrorMessage('El nombre y apellido solo pueden contener letras.');
+            setErrorMessage('El nombre y apellido solo pueden contener letras y tener como máximo 15 caracteres.');
             return;
         }
-        if (!validateEmail(email)) {
-            setErrorMessage('Por favor, ingresa un correo electrónico válido.');
+        if (!validateCorreo(correo)) {
+            setErrorMessage('Por favor, ingresa un correo electrónico válido (mínimo 15 caracteres y máximo 35).');
             return;
         }
-        if (!validatePassword(password)) {
-            setErrorMessage('La contraseña debe tener al menos 8 caracteres, con letras, números y un símbolo.');
+        if (!validateContrasena(contrasena)) {
+            setErrorMessage('La contraseña debe tener entre 10 y 35 caracteres, con letras, números y al menos un símbolo.');
             return;
         }
 
+        try {
+            await handleRegister(name, lastName, correo, contrasena);
+        } catch (error) {
+            console.error('Registro fallido:', error);
+            setErrorMessage('Error al registrar el usuario. Inténtalo de nuevo.');
+        }
     };
 
-    const handlePasswordVisibility = () => {
-        setPasswordVisible(!passwordVisible);
-    };
-
-    // Validación para el formato del correo electrónico
-    const validateEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
-    // Validación para nombre y apellido (solo letras y espacios)
-    const validateName = (value) => /^[a-zA-Z\s]+$/.test(value);
-
-    // Validación de contraseña (mínimo 8 caracteres, con letras, números y al menos un símbolo)
-    const validatePassword = (value) => {
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-        return passwordRegex.test(value);
+    const handleContrasenaVisibility = () => {
+        setContrasenaVisible(prev => !prev); // Alternar visibilidad
     };
 
     return (
@@ -78,74 +86,101 @@ const Login = () => {
                     <div className="caja__trasera_login">
                         <h3>¿Ya tienes una cuenta?</h3>
                         <p>Inicia sesión para entrar en la página</p>
-                        <button id="btn__iniciar_sesion" onClick={toggleToLogin}>Iniciar sesión</button>
+                        <button id="btn__iniciar_sesion" onClick={toggleView}>Iniciar sesión</button>
                     </div>
                     <div className="caja__trasera_register">
                         <h3>¿Aún no tienes una cuenta?</h3>
                         <p>Regístrate para que puedas iniciar sesión</p>
-                        <button id="btn__registrarse" onClick={toggleToRegister}>Registrarse</button>
+                        <button id="btn__registrarse" onClick={toggleView}>Registrarse</button>
                     </div>
                 </div>
 
                 <div className="contenedor__login-register">
-                    <form className={`formulario__login ${isRegisterView ? 'hidden' : ''}`} onSubmit={handleLogin}>
+                    <form className={`formulario__login ${isRegisterView ? 'hidden' : ''}`} onSubmit={handleLoginSubmit}>
                         <h2>Iniciar sesión</h2>
                         <input
                             type="email"
                             placeholder="Correo Electrónico"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={correo}
+                            onChange={(e) => {
+                                if (e.target.value.length <= 35) { // Limitar a 35 caracteres
+                                    setCorreo(e.target.value);
+                                }
+                            }}
                             required
                         />
                         <div className="password-container">
                             <input
-                                type={passwordVisible ? 'text' : 'password'}
+                                type={contrasenaVisible ? 'text' : 'password'}
                                 placeholder="Contraseña"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={contrasena}
+                                onChange={(e) => {
+                                    if (e.target.value.length <= 35) { // Limitar a 35 caracteres
+                                        setContrasena(e.target.value);
+                                    }
+                                }}
                                 required
                             />
-                            <span className="password-icon-login" onClick={handlePasswordVisibility}>
-                                {passwordVisible ? <img src={Images.icons.visibilityoff} alt='' className='visibility-icon'/> : <img src={Images.icons.visibility} alt='' className='visibility-icon'/>}
+                            <span className="password-icon" onClick={handleContrasenaVisibility}>
+                                {contrasenaVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                             </span>
                         </div>
                         {errorMessage && <p className="error-message">{errorMessage}</p>}
                         <button type="submit">Entrar</button>
+                        <p>
+                            <Link to="/RecoverPassword">¿Olvidaste tu contraseña?</Link>
+                        </p>
                     </form>
 
-                    <form className={`formulario__register ${!isRegisterView ? 'hidden' : ''}`} onSubmit={handleRegister}>
+                    <form className={`formulario__register ${!isRegisterView ? 'hidden' : ''}`} onSubmit={handleRegisterSubmit}>
                         <h2>Registrarse</h2>
                         <input
                             type="text"
                             placeholder="Nombre"
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => {
+                                if (e.target.value.length <= 15) { // Limitar a 15 caracteres
+                                    setName(e.target.value);
+                                }
+                            }}
                             required
                         />
                         <input
                             type="text"
                             placeholder="Apellido"
                             value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
+                            onChange={(e) => {
+                                if (e.target.value.length <= 15) { // Limitar a 15 caracteres
+                                    setLastName(e.target.value);
+                                }
+                            }}
                             required
                         />
                         <input
                             type="email"
                             placeholder="Correo"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={correo}
+                            onChange={(e) => {
+                                if (e.target.value.length <= 35) { // Limitar a 35 caracteres
+                                    setCorreo(e.target.value);
+                                }
+                            }}
                             required
                         />
                         <div className="password-container">
                             <input
-                                type={passwordVisible ? 'text' : 'password'}
+                                type={contrasenaVisible ? 'text' : 'password'}
                                 placeholder="Contraseña"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={contrasena}
+                                onChange={(e) => {
+                                    if (e.target.value.length <= 35) { // Limitar a 35 caracteres
+                                        setContrasena(e.target.value);
+                                    }
+                                }}
                                 required
                             />
-                            <span className="password-icon-register" onClick={handlePasswordVisibility}>
-                                {passwordVisible ? <img src={Images.icons.visibilityoff} alt='' className='visibility-icon'/> : <img src={Images.icons.visibility} alt='' className='visibility-icon'/>}
+                            <span className="password-icon" onClick={handleContrasenaVisibility}>
+                                {contrasenaVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                             </span>
                         </div>
                         {errorMessage && <p className="error-message">{errorMessage}</p>}

@@ -20,13 +20,23 @@ class Usuario {
         });
     }
 
-    static createUser(userData, callback) {
+    // Crear nuevo usuario
+    static async createUser(userData) {
         const { correo, contrasena, nombre, apellido, rol } = userData;
+        const hashedPassword = await bcrypt.hash(contrasena, 10); // Encriptar contraseña
         const query = 'INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol) VALUES (?, ?, ?, ?, ?)';
-        db.query(query, [correo, contrasena, nombre, apellido, rol], (err, results) => {
-            if (err) return callback(err, null);
-            callback(null, { id: results.insertId, ...userData });
-        });
+        try {
+            const results = await new Promise((resolve, reject) => {
+                db.query(query, [correo, hashedPassword, nombre, apellido, rol], (err, results) => {
+                    if (err) return reject(err);
+                    resolve({ id_usuarios: results.insertId, ...userData });
+                });
+            });
+            return results;
+        } catch (error) {
+            console.error('Error al crear usuario:', error);
+            throw new Error('No se pudo crear el usuario.');
+        }
     }
 
     static deleteUserById(id, callback) {
