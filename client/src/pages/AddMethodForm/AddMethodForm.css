@@ -1,0 +1,94 @@
+.add-method-form {
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-left: 270px;
+    
+  }
+  
+  .add-method-form h2 {
+    font-size: 24px; /* Tamaño de fuente más grande */
+    margin-bottom: 20px;
+    color: #000000;
+    font-weight: 500;
+  }
+  
+  .AddMethodPayment-fom {
+    padding: 10px;
+  }
+
+  .AddMethodPayment-fom h3 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #4E4E4E;
+  }
+  
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px; /* Mayor espacio entre campos */
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"] {
+    padding: 12px; /* Mayor padding en los campos */
+    font-size: 16px; /* Tamaño de fuente más grande */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+  }
+  
+  .full-width {
+    grid-column: 1 / -1;
+  }
+  
+  .expiry, .cvc {
+    width: 100%;
+  }
+  
+  .terms {
+    font-size: 14px;
+    color: #666;
+    margin-top: 20px;
+    line-height: 1.6;
+    text-align: center; /* Centrar el texto */
+  }
+  
+  .terms a {
+    color: #000;
+    text-decoration: underline;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: center; /* Centrar los botones */
+    gap: 15px; /* Mayor espacio entre botones */
+    margin-top: 30px;
+  }
+  
+  button {
+    padding: 12px 25px; /* Tamaño más grande para los botones */
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .cancel-btn {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .save-btn {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .save-btn:hover {
+    background-color: #555;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #ddd;
+  }
+  

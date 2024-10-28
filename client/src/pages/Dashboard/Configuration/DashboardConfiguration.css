@@ -1,0 +1,59 @@
+Configuration.css
+.configuration-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .configuration-content {
+    margin-left: 250px; /* Ajuste para respetar el sidebar */
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+  }
+  
+  h1 {
+    color: #007bff;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .config-options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .config-card {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: 250px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .config-card h3 {
+    margin-bottom: 10px;
+    color: #333333;
+  }
+  
+  .config-card p {
+    color: #666666;
+    margin-bottom: 15px;
+  }
+  
+  .config-card button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .config-card button:hover {
+    background-color: #0056b3;
+  }
+  
