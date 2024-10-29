@@ -23,7 +23,7 @@ const AccountModal = ({ isOpen, onClose }) => {
 
     const handleManageAccount = () => {
         onClose();
-        navigate('/AccountManage');
+        navigate('/gestion-cuenta');
     };
 
     return (

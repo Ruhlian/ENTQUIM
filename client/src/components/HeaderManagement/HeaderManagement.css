@@ -1,0 +1,42 @@
+.header-management-custom {
+    padding: 0 25px;
+    border-bottom: 1px solid #1a719a15;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff;
+}
+
+.container-management-custom {
+    display: flex;
+    height: 60px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-management-custom {
+    font-size: 14px;
+}
+
+.link-management-custom {
+    text-decoration: none;
+    color: black;
+    display: flex;
+    align-items: center;
+}
+
+.arrow-management-custom {
+    width: 27px;
+    margin-right: 5px;
+}
+
+.go-back-custom {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.brand-img-management-custom {
+    margin-top: 10px;
+    width: 115px;
+}

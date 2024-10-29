@@ -1,3 +1,5 @@
+// AuthContext.js
+
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import AuthService from '../services/AuthService';
 import { toast } from 'react-toastify';
@@ -42,8 +44,8 @@ export const AuthProvider = ({ children }) => {
 
             if (storedUser && token) {
                 try {
-                    await AuthService.verifyToken(token);
-                    setUser(JSON.parse(storedUser));
+                    const verifiedUser = await AuthService.verifyToken(token);
+                    setUser(verifiedUser || JSON.parse(storedUser));
                 } catch {
                     handleInvalidToken();
                 }
@@ -70,7 +72,7 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('user', JSON.stringify(data.user));
                 localStorage.setItem('token', data.token);
                 showToast('Inicio de sesión exitoso!', 'success');
-                navigate('/'); // Cambia '/' por la ruta a la que quieras redirigir
+                navigate('/');
             } else {
                 showToast('No se encontró el usuario en la respuesta.', 'error');
             }
@@ -82,23 +84,21 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const handleRegister = async (name, lastName, correo, contrasena) => {
+    const handleRegister = async (nombre, apellido, correo, contrasena) => {
         setLoading(true);
         try {
-            const response = await AuthService.register(name, lastName, correo, contrasena);
-            if (response && response.id_usuarios) {
-                showToast('Registro exitoso. Puedes iniciar sesión ahora.', 'success');
-                navigate('/Iniciar-Sesion'); // Redirigir a la página de inicio de sesión
-            } else {
-                showToast('No se encontró el usuario en la respuesta.', 'error');
+            const data = await AuthService.register(nombre, apellido, correo, contrasena);
+            if (data) {
+                showToast('Registro exitoso! Por favor, inicia sesión.', 'success');
+                navigate('/Iniciar-Sesion');
             }
         } catch (err) {
             console.error("Error en registro:", err);
-            showToast('Error al registrar el usuario. Inténtalo de nuevo.', 'error');
+            showToast(err.message || 'Error en el registro. Intente nuevamente.', 'error');
         } finally {
             setLoading(false);
         }
-    };    
+    };
 
     const handleLogout = async () => {
         setLoading(true);
@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }) => {
 
         if (token) {
             try {
-                await AuthService.invalidateToken(token); // Invalidar el token en el servidor
+                await AuthService.invalidateToken(token);
                 console.log('Token invalidado exitosamente');
             } catch (err) {
                 console.error("Error al invalidar el token:", err);
@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, handleLogin, handleLogout, handleRegister, loading }}>
+        <AuthContext.Provider value={{ user, handleLogin, handleRegister, handleLogout, loading }}>
             {children}
         </AuthContext.Provider>
     );

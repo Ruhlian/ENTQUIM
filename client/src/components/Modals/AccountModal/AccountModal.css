@@ -10,7 +10,6 @@
     z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
     border-left: #000 1px solid;
     border-bottom: #000 1px solid;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Mejora la sombra */
     border-bottom-left-radius: 15px;
     transition: top 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Animación de desplazamiento y opacidad */
     opacity: 0; /* Inicialmente invisible */

@@ -41,6 +41,18 @@ import visibility from '../../assets/icons/visibility.png';
 import visibilityOff from '../../assets/icons/visibility-off.png';
 import blueForwardArrow from '../../assets/icons/blue-forward-arrow.png';
 import blueBackArrow from '../../assets/icons/blue-back-arrow.png';
+import blackBackArrow from '../../assets/icons/black-back-arrow.png';
+import homeSelected from '../../assets/icons/home-selected.png';
+import homeUnselected from '../../assets/icons/home-unselected.png';
+import soldSelected from '../../assets/icons/solds-selected.png';
+import soldUnselected from '../../assets/icons/solds-unselected.png';
+import reportSelected from '../../assets/icons/reports-selected.png';
+import reportUnselected from '../../assets/icons/reports-unselected.png';
+import more from '../../assets/icons/more.png';
+import personSelected from '../../assets/icons/person-selected.png';
+import personUnselected from '../../assets/icons/person-unselected.png';
+import paymentsSelected from '../../assets/icons/payments-selected.png';
+import paymentsUnselected from '../../assets/icons/payments-unselected.png';
 
 const Images = {
     plagues: {
@@ -74,7 +86,19 @@ const Images = {
         bluebackarrow: blueBackArrow,
         whitecart: whiteCart,
         visibility: visibility,
-        visibilityoff: visibilityOff
+        visibilityoff: visibilityOff,
+        blackbackarrow: blackBackArrow,
+        homeselected: homeSelected,
+        homeunselected: homeUnselected,
+        soldselected: soldSelected,
+        soldunselected: soldUnselected,
+        reportselected: reportSelected,
+        reportunselected: reportUnselected,
+        threepoints: more,
+        personselected: personSelected,
+        personunselected: personUnselected,
+        paymentsselected: paymentsSelected,
+        paymentsunselected: paymentsUnselected
     },
     homeCarousel: {
         img1: img1Carousel,

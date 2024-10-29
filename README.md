@@ -18,7 +18,7 @@ npm install react-toastify
 npm install react-icons
 npm install chart.js
 npm install dotenv 
-
+npm install @mui/material @emotion/react @emotion/styled
 
 TRAER EL REPOSITORIO DE GITHUB (cmd):
 abrir una nueva cmd

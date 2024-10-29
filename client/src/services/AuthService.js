@@ -1,11 +1,10 @@
 import api from './Api';
 
 const AuthService = {
-    // Método para iniciar sesión
     login: async (correo, contrasena) => {
         console.log('Intentando iniciar sesión con:', { correo, contrasena });
 
-        // Validaciones previas
+        // Validar campos requeridos
         if (!correo || !contrasena) {
             console.warn('Faltan campos requeridos:', { correo, contrasena });
             throw new Error('Por favor, ingrese todos los campos requeridos.');
@@ -15,12 +14,12 @@ const AuthService = {
             const response = await api.post('/usuarios/login', { correo, contrasena });
             console.log('Respuesta del servidor:', response);
 
+            // Verificar respuesta del servidor
             if (response.status === 200) {
                 const { data } = response;
                 console.log('Inicio de sesión exitoso, datos recibidos:', data);
-                return data;
+                return data; // Asegúrate de que esto incluya 'user' y 'token'
             } else {
-                // Manejo de error específico
                 if (response.status === 401) {
                     throw new Error('Correo o contraseña incorrectos.');
                 }
@@ -28,16 +27,15 @@ const AuthService = {
                 throw new Error('Error en el inicio de sesión');
             }
         } catch (error) {
-            console.error('Error en el inicio de sesión:', error.response || error);
+            console.error('Error en el inicio de sesión:', error.response ? error.response.data : error);
             throw AuthService.handleError(error, 'Error en el inicio de sesión');
         }
     },
 
-    // Método para registrar un nuevo usuario
     register: async (nombre, apellido, correo, contrasena) => {
         console.log('Registrando nuevo usuario:', { nombre, apellido, correo, contrasena });
 
-        // Validaciones previas
+        // Validar campos requeridos
         if (!nombre || !apellido || !correo || !contrasena) {
             throw new Error('Por favor, ingrese todos los campos requeridos.');
         }
@@ -47,7 +45,7 @@ const AuthService = {
             console.log('Respuesta del servidor para registro:', response);
 
             if (response.status === 201) {
-                const { data } = response; // Desestructurando para obtener solo los datos
+                const { data } = response;
                 console.log('Registro exitoso, datos recibidos:', data);
                 
                 if (!data || !data.id_usuarios) {
@@ -64,11 +62,9 @@ const AuthService = {
         }
     },
 
-    // Método para solicitar el restablecimiento de contraseña
     requestPasswordReset: async (correo) => {
         console.log('Solicitando restablecimiento de contraseña para:', { correo });
 
-        // Validaciones previas
         if (!correo) {
             throw new Error('Por favor, ingrese el correo electrónico.');
         }
@@ -79,9 +75,9 @@ const AuthService = {
 
             if (response.status === 200) {
                 if (response.data.message) {
-                    return response.data.message; // Si el servidor envía un mensaje
+                    return response.data.message;
                 }
-                return response.data; // Devuelve los datos de la respuesta
+                return response.data;
             } else {
                 throw new Error('Error en la solicitud de restablecimiento de contraseña');
             }
@@ -91,11 +87,9 @@ const AuthService = {
         }
     },
 
-    // Método para invalidar el token
     invalidateToken: async (token) => {
         console.log('Invalidando token:', token);
 
-        // Validaciones previas
         if (!token) {
             throw new Error('Token no proporcionado.');
         }
@@ -115,7 +109,6 @@ const AuthService = {
         }
     },
 
-    // Método para manejar errores de manera centralizada
     handleError: (error, defaultMessage) => {
         if (error.response) {
             return new Error(error.response.data.message || defaultMessage);
@@ -126,17 +119,15 @@ const AuthService = {
         }
     },
 
-    // Método para verificar el token
     verifyToken: async (token) => {
         console.log('Verificando token:', token);
 
-        // Validaciones previas
         if (!token) {
             throw new Error('Token no proporcionado.');
         }
 
         try {
-            const response = await api.get('/usuarios/verify-token', { token }); // Cambiado a POST
+            const response = await api.get('/usuarios/verify-token', { headers: { Authorization: `Bearer ${token}` } }); // Cambiado para incluir el token en los headers
             console.log('Token verificado con éxito:', response);
             return response.data; // Esto puede incluir información del usuario si es necesario
         } catch (error) {

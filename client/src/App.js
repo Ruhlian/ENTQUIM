@@ -6,12 +6,16 @@ import { ToastContainer } from 'react-toastify'; // Importa ToastContainer
 
 // Importación de páginas.
 import Layout from './components/Layout/Layout';
+import ManagementLayout from './components/ManagementLayout/ManagementLayout';
 import Home from './pages/Home/Home';
 import AboutUs from './pages/Us/AboutUs';
 import Products from './pages/Products/Products';
 import Contact from './pages/Contact/Contact';
 import Login from './pages/Login/Login';
 import AllProducts from './pages/AllProducts/AllProducts';
+import AccountInfo from './pages/Account/Account';
+import Payment from './pages/Payment/Payment';
+import AddMethodForm from './pages/AddMethodForm/AddMethodForm'
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -68,6 +72,39 @@ function App() {
                             </Layout>
                         </>
                     } />
+
+                    <Route path='/gestion-cuenta' exact element={
+                        <>
+                        <ManagementLayout>
+                            <AccountInfo/>
+                        </ManagementLayout>
+                        </>
+                    }/>
+
+                    <Route path='/gestion-cuenta/mi-cuenta' exact element={
+                        <>
+                        <ManagementLayout>
+                            <AccountInfo/>
+                        </ManagementLayout>
+                        </>
+                    }/>
+
+                    <Route path='/gestion-cuenta/pagos' exact element={
+                        <>
+                        <ManagementLayout>
+                            <Payment/>
+                        </ManagementLayout>
+                        </>
+                    }/>
+
+                    <Route path='/gestion-cuenta/pagos/nuevo-metodo' exact element={
+                        <>
+                        <ManagementLayout>
+                            <AddMethodForm/>
+                        </ManagementLayout>
+                        </>
+                    }/>
+                    
                 </Routes>
             </AuthProvider>
         </Router>

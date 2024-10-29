@@ -1,12 +1,12 @@
 // tokenCleaner.js
-const connection = require('./conexion');
+const connection = require('../config/conexion');
 
 const cleanExpiredTokens = async () => {
     try {
         const currentTime = new Date();
 
         // Eliminar tokens cuya fecha de expiración ya ha pasado
-        const query = 'DELETE FROM tokens WHERE expires_at < ?';
+        const query = 'DELETE FROM tokens_usuarios WHERE expires_at < ?';
         connection.query(query, [currentTime], (error, results) => {
             if (error) {
                 console.error('Error al limpiar tokens expirados:', error);

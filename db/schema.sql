@@ -60,10 +60,26 @@ CREATE TABLE Usuarios (
     id_usuarios INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(55),
     apellido VARCHAR(55),
-    correo VARCHAR(255) UNIQUE NOT NULL,
-    contrasena VARCHAR(255) NOT NULL,
+    correo VARCHAR(200) UNIQUE NOT NULL,
+    contrasena VARCHAR(200) NOT NULL,
+    fecha_nacimiento DATE,
+    telefono VARCHAR (15),
     id_rol INT,
     FOREIGN KEY (id_rol) REFERENCES Roles(id_rol) ON DELETE SET NULL
+);
+
+CREATE TABLE Metodos_Pago (
+    id_metodo_pago INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuarios INT,
+    nombre_titular VARCHAR(100),
+    numero_tarjeta CHAR(16), -- Se puede enmascarar en el frontend por seguridad
+    mm_aa CHAR(5),           -- Mes y año en formato MM/AA
+    cvc CHAR(3),
+    direccion VARCHAR(255),
+    ciudad VARCHAR(100),
+    pais VARCHAR(100),
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuarios) REFERENCES Usuarios(id_usuarios) ON DELETE CASCADE
 );
 
 CREATE TABLE Actividad_Usuarios (

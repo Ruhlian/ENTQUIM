@@ -1,4 +1,5 @@
 const db = require('../config/conexion');
+const bcrypt = require('bcrypt');
 
 class Usuario {
     // Obtener todos los usuarios
@@ -22,12 +23,15 @@ class Usuario {
 
     // Crear nuevo usuario
     static async createUser(userData) {
-        const { correo, contrasena, nombre, apellido, rol } = userData;
+        const { correo, contrasena, nombre, apellido, rol, fecha_nacimiento, telefono } = userData;
         const hashedPassword = await bcrypt.hash(contrasena, 10); // Encriptar contraseña
-        const query = 'INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol) VALUES (?, ?, ?, ?, ?)';
+        const query = `
+            INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol, fecha_nacimiento, telefono)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
         try {
             const results = await new Promise((resolve, reject) => {
-                db.query(query, [correo, hashedPassword, nombre, apellido, rol], (err, results) => {
+                db.query(query, [correo, hashedPassword, nombre, apellido, rol, fecha_nacimiento, telefono], (err, results) => {
                     if (err) return reject(err);
                     resolve({ id_usuarios: results.insertId, ...userData });
                 });
@@ -39,9 +43,19 @@ class Usuario {
         }
     }
 
+    // Eliminar usuario por ID
     static deleteUserById(id, callback) {
         const query = 'DELETE FROM Usuarios WHERE id_usuarios = ?';
         db.query(query, [id], (err, results) => {
+            if (err) return callback(err, null);
+            callback(null, results);
+        });
+    }
+
+    // Obtener métodos de pago del usuario
+    static getPaymentMethods(userId, callback) {
+        const query = 'SELECT * FROM Metodos_Pago WHERE id_usuarios = ?';
+        db.query(query, [userId], (err, results) => {
             if (err) return callback(err, null);
             callback(null, results);
         });

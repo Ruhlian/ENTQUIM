@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './Account.css';
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import InfoCard from "../../components/InfoCard/InfoCard";
 import TextField from '@mui/material/TextField';
+import { useAuth } from "../../context/AuthContext";
 
 const AccountInfo = () => {
   const paths = [
@@ -10,6 +11,7 @@ const AccountInfo = () => {
     { name: 'Información Personal', link: '/mi-cuenta' }
   ];
 
+  const { user } = useAuth();
   const [formValues, setFormValues] = useState({
     nombre: "",
     apellido: "",
@@ -28,14 +30,28 @@ const AccountInfo = () => {
     direccion: ""
   });
 
+  useEffect(() => {
+    // Si existe un usuario, se actualizan los valores del formulario con su información
+    if (user) {
+      setFormValues({
+        nombre: user.nombre || "",
+        apellido: user.apellido || "",
+        fechaNacimiento: user.fechaNacimiento || "",
+        correo: user.correo || "",
+        telefono: user.telefono || "",
+        direccion: user.direccion || ""
+      });
+    }
+  }, [user]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     const today = new Date();
     const currentYear = today.getFullYear();
 
+    // Validaciones de fecha de nacimiento
     if (name === "fechaNacimiento") {
       const birthDate = value ? new Date(value) : null;
-
       if (birthDate && birthDate.getFullYear() > currentYear) {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -45,6 +61,7 @@ const AccountInfo = () => {
       }
     }
 
+    // Actualizar valores del formulario
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,

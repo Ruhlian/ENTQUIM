@@ -74,12 +74,12 @@
     border: none;
   }
   
-  .cancel-btn {
+  .cancel__button-add-method {
     background-color: #f0f0f0;
     color: #333;
   }
   
-  .save-btn {
+  .save__button-cancel-method {
     background-color: #333;
     color: #fff;
   }

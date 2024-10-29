@@ -2,35 +2,45 @@ const connection = require('../config/conexion');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const login = (req, res) => {
-    const { correo, contrasena } = req.body; // Cambiado de email y password a correo y contrasena
-
-    // Consulta para buscar al usuario por correo
+// Función para buscar un usuario por correo
+const findUserByEmail = async (correo) => {
     const query = 'SELECT * FROM usuarios WHERE correo = ?';
+    return new Promise((resolve, reject) => {
+        connection.query(query, [correo], (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
+};
 
-    connection.query(query, [correo], async (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: 'Error en la base de datos.' });
-        }
+// Función para validar la contraseña
+const validatePassword = async (inputPassword, storedPassword) => {
+    return await bcrypt.compare(inputPassword, storedPassword);
+};
 
-        if (results.length === 0) {
-            return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
-        }
+// Generar token
+const generateToken = (user) => {
+    return jwt.sign({ id: user.UsuarioId }, 'secretojwt', { expiresIn: '1h' });
+};
 
+// Controlador de inicio de sesión
+const login = async (req, res) => {
+    const { correo, contrasena } = req.body;
+
+    try {
+        const results = await findUserByEmail(correo);
         const user = results[0];
 
-        // Comparar la contraseña con bcrypt
-        const isMatch = await bcrypt.compare(contrasena, user.contrasena);
-
-        if (!isMatch) {
-            return res.status(401).json({ error: 'Correo o contraseña incorrectos.' });
+        if (!user || !await validatePassword(contrasena, user.contrasena)) {
+            return res.status(401).json({ message: 'Correo o contraseña incorrectos.' });
         }
 
-        // Crear un token JWT
-        const token = jwt.sign({ id: user.UsuarioId }, 'secretojwt', { expiresIn: '1h' });
-
-        res.json({ token, message: 'Login exitoso' });
-    });
+        const token = generateToken(user);
+        res.json({ token, user: { id: user.UsuarioId, correo: user.correo } });
+    } catch (error) {
+        console.error('Error en el inicio de sesión:', error);
+        res.status(500).json({ message: 'Error en el servidor.' });
+    }
 };
 
 module.exports = { login };

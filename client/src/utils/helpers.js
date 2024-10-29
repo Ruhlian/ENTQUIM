@@ -2,10 +2,11 @@
 
 // Función para validar el formato del correo electrónico
 // Acepta correos en el formato: nombre@dominio.com, mínimo 15 caracteres antes del @, debe incluir número
-export const validateCorreo = (correo_usuarios) => {
-    const emailRegex = /^(?=.*[0-9])[a-zA-Z0-9._%+-]{10,35}@[a-zA-Z0-9.-]+\.(com|net|org|edu|gov|mil|co|info|io|me|us)$/;
-    return emailRegex.test(correo_usuarios);
+export const validateCorreo = (correo) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Valida el formato de correo básico
+    return emailRegex.test(correo); // Retorna true si es un correo válido
 };
+
 
 // Función para validar el nombre y apellido
 // Acepta solo letras (incluidas letras acentuadas) y espacios, máximo 15 caracteres
