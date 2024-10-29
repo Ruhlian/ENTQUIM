@@ -112,11 +112,11 @@ const verifyToken = async (req, res) => {
 
 // Registrar un nuevo usuario
 const register = async (req, res) => {
-    const { nombre, apellido, correo, contrasena, id_rol } = req.body;
+    const { nombre, apellido, correo, contrasena, id_rol, fecha_nacimiento, telefono } = req.body;
     const defaultRoleId = 3; 
     const roleId = id_rol || defaultRoleId;
 
-    if (!nombre || !apellido || !correo || !contrasena) {
+    if (!nombre || !apellido || !correo || !contrasena || !fecha_nacimiento || !telefono) {
         return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
     }
 
@@ -136,14 +136,17 @@ const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(contrasena, 10);
 
         const { insertId } = await new Promise((resolve, reject) => {
-            const query = 'INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol) VALUES (?, ?, ?, ?, ?)';
-            connection.query(query, [correo, hashedPassword, nombre, apellido, roleId], (err, results) => {
+            const query = `
+                INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol, fecha_nacimiento, telefono) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `;
+            connection.query(query, [correo, hashedPassword, nombre, apellido, roleId, fecha_nacimiento, telefono], (err, results) => {
                 if (err) return reject(err);
                 resolve(results);
             });
         });
 
-        res.status(201).json({ id_usuarios: insertId, correo, nombre, apellido, id_rol: roleId });
+        res.status(201).json({ id_usuarios: insertId, correo, nombre, apellido, id_rol: roleId, fecha_nacimiento, telefono });
     } catch (err) {
         res.status(500).json({ error: 'Error en la base de datos.' });
     }

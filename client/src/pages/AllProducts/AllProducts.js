@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './AllProducts.css';
 import { Link } from 'react-router-dom';
+import ProductService from '../../services/ProductsService'; // Asegúrate de importar el servicio de productos
 
 const AllProducts = () => {
     const [productos, setProductos] = useState([]);
@@ -11,16 +12,18 @@ const AllProducts = () => {
     const [precioMax, setPrecioMax] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:3001/productos')
-            .then((response) => response.json())
-            .then((data) => {
+        const loadProductos = async () => {
+            try {
+                const data = await ProductService.fetchProductos(); // Usamos el servicio
                 setProductos(data);
+            } catch (error) {
+                console.error('Error al cargar productos:', error);
+            } finally {
                 setIsLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching productos:', error);
-                setIsLoading(false);
-            });
+            }
+        };
+
+        loadProductos();
     }, []);
 
     const handleCategoriaChange = (categoria) => {
@@ -45,7 +48,7 @@ const AllProducts = () => {
 
     const productosFiltrados = productos.filter((producto) => {
         if (categoriasSeleccionadas.length > 0) {
-            return categoriasSeleccionadas.includes(producto.categoria);
+            return categoriasSeleccionadas.includes(producto.id_categoria); // Filtra por id_categoria
         }
         return true;
     }).filter((producto) => {
@@ -64,7 +67,6 @@ const AllProducts = () => {
 
     return (
         <>
-
             <div className="allproducts-page">
                 <div className="allproducts-filter__container">
                     <h3 className="allproducts-filter__title">Filtrar</h3>
@@ -75,8 +77,8 @@ const AllProducts = () => {
                             <label>
                                 <input 
                                     type="checkbox" 
-                                    checked={categoriasSeleccionadas.includes('Insectos')}
-                                    onChange={() => handleCategoriaChange('Insectos')}
+                                    checked={categoriasSeleccionadas.includes(1)} // ID para Insectos
+                                    onChange={() => handleCategoriaChange(1)}
                                 />
                                 <span> Insectos</span>
                             </label>
@@ -86,10 +88,10 @@ const AllProducts = () => {
                             <label>
                                 <input 
                                     type="checkbox" 
-                                    checked={categoriasSeleccionadas.includes('Roedores')}
-                                    onChange={() => handleCategoriaChange('Roedores')}
+                                    checked={categoriasSeleccionadas.includes(4)} // ID para Larvas
+                                    onChange={() => handleCategoriaChange(4)}
                                 />
-                                <span> Roedores</span>
+                                <span> Larvas</span>
                             </label>
                         </div>
 
@@ -97,10 +99,21 @@ const AllProducts = () => {
                             <label>
                                 <input 
                                     type="checkbox" 
-                                    checked={categoriasSeleccionadas.includes('Otros')}
-                                    onChange={() => handleCategoriaChange('Otros')}
+                                    checked={categoriasSeleccionadas.includes(3)} // ID para Murciélagos
+                                    onChange={() => handleCategoriaChange(3)}
                                 />
-                                <span> Otros</span>
+                                <span> Murciélagos</span>
+                            </label>
+                        </div>
+
+                        <div className="allproducts-category__item">
+                            <label>
+                                <input 
+                                    type="checkbox" 
+                                    checked={categoriasSeleccionadas.includes(2)} // ID para Roedores
+                                    onChange={() => handleCategoriaChange(2)}
+                                />
+                                <span> Roedores</span>
                             </label>
                         </div>
                     </div>
@@ -143,7 +156,7 @@ const AllProducts = () => {
                         <h4>Rango de Precio</h4>
                         <div className="allproducts-price__manual-inputs">
                             <input 
-                                type="chechkbox" 
+                                type="number" 
                                 placeholder="Mín" 
                                 value={precioMin} 
                                 onChange={(e) => setPrecioMin(e.target.value)} 
@@ -174,10 +187,10 @@ const AllProducts = () => {
                             <p>Cargando productos...</p>
                         ) : productosFiltrados.length > 0 ? (
                             productosFiltrados.map((producto) => (
-                                <div className='allproducts-product__card' key={producto.id}>
-                                    <Link to={`/ProductDetails/${producto.id}`}>
+                                <div className='allproducts-product__card' key={producto.id_producto}>
+                                    <Link to={`/ProductDetails/${producto.id_producto}`}>
                                         <img 
-                                            src={`http://localhost:3001${producto.imagen}`} 
+                                            src={producto.imagen} 
                                             alt={producto.nombre} 
                                             className='allproducts-product__image'
                                         />
@@ -196,7 +209,6 @@ const AllProducts = () => {
                     </div>
                 </div>
             </div>
-
         </>
     );
 };

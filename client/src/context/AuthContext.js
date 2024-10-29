@@ -44,14 +44,14 @@ export const AuthProvider = ({ children }) => {
 
             if (storedUser && token) {
                 try {
-                    const verifiedUser = await AuthService.verifyToken(token);
-                    setUser(verifiedUser || JSON.parse(storedUser));
+                    await AuthService.verifyToken(token);
+                    setUser(JSON.parse(storedUser));
                 } catch {
                     handleInvalidToken();
                 }
             }
             setLoading(false);
-        };
+        };;
 
         const handleInvalidToken = () => {
             localStorage.removeItem('user');
@@ -84,10 +84,10 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const handleRegister = async (nombre, apellido, correo, contrasena) => {
+    const handleRegister = async (nombre, apellido, correo, contrasena, fecha_nacimiento, telefono) => {
         setLoading(true);
         try {
-            const data = await AuthService.register(nombre, apellido, correo, contrasena);
+            const data = await AuthService.register(nombre, apellido, correo, contrasena, fecha_nacimiento, telefono);
             if (data) {
                 showToast('Registro exitoso! Por favor, inicia sesión.', 'success');
                 navigate('/Iniciar-Sesion');
@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    };
+    };    
 
     const handleLogout = async () => {
         setLoading(true);

@@ -24,7 +24,7 @@ class Usuario {
     // Crear nuevo usuario
     static async createUser(userData) {
         const { correo, contrasena, nombre, apellido, rol, fecha_nacimiento, telefono } = userData;
-        const hashedPassword = await bcrypt.hash(contrasena, 10); // Encriptar contraseña
+        const hashedPassword = await bcrypt.hash(contrasena, 10);
         const query = `
             INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol, fecha_nacimiento, telefono)
             VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -41,7 +41,7 @@ class Usuario {
             console.error('Error al crear usuario:', error);
             throw new Error('No se pudo crear el usuario.');
         }
-    }
+    }    
 
     // Eliminar usuario por ID
     static deleteUserById(id, callback) {

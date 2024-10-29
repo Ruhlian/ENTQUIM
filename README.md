@@ -41,6 +41,8 @@ npm install cors
 npm install body-parser
 npm install mysql2
 npm install express-validator
+npm install multer
+
 
 EN WORKBENCH:
 Crear la base de datos llamada dbentquim.

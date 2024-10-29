@@ -32,26 +32,34 @@ const AuthService = {
         }
     },
 
-    register: async (nombre, apellido, correo, contrasena) => {
-        console.log('Registrando nuevo usuario:', { nombre, apellido, correo, contrasena });
-
+    register: async (nombre, apellido, correo, contrasena, fecha_nacimiento, telefono) => {
+        console.log('Registrando nuevo usuario:', { nombre, apellido, correo, contrasena, fecha_nacimiento, telefono });
+    
         // Validar campos requeridos
-        if (!nombre || !apellido || !correo || !contrasena) {
+        if (!nombre || !apellido || !correo || !contrasena || !fecha_nacimiento || !telefono) {
             throw new Error('Por favor, ingrese todos los campos requeridos.');
         }
-
+    
         try {
-            const response = await api.post('/usuarios/register', { nombre, apellido, correo, contrasena });
+            const response = await api.post('/usuarios/register', {
+                nombre,
+                apellido,
+                correo,
+                contrasena,
+                fecha_nacimiento,
+                telefono
+            });
+    
             console.log('Respuesta del servidor para registro:', response);
-
+    
             if (response.status === 201) {
                 const { data } = response;
                 console.log('Registro exitoso, datos recibidos:', data);
-                
+    
                 if (!data || !data.id_usuarios) {
                     throw new Error('No se encontró el usuario en la respuesta.');
                 }
-
+    
                 return data; // Devolvemos los datos del usuario
             } else {
                 throw new Error('Error en el registro');
@@ -60,7 +68,7 @@ const AuthService = {
             console.error('Error en el registro:', error);
             throw AuthService.handleError(error, 'Error en el registro');
         }
-    },
+    },    
 
     requestPasswordReset: async (correo) => {
         console.log('Solicitando restablecimiento de contraseña para:', { correo });
