@@ -33,10 +33,12 @@ const AccountInfo = () => {
   useEffect(() => {
     // Si existe un usuario, se actualizan los valores del formulario con su información
     if (user) {
+      // Formatear la fecha de nacimiento en el formato YYYY-MM-DD
+      const formattedDate = user.fecha_nacimiento ? user.fecha_nacimiento.split('T')[0] : "";
       setFormValues({
         nombre: user.nombre || "",
         apellido: user.apellido || "",
-        fechaNacimiento: user.fechaNacimiento || "",
+        fechaNacimiento: formattedDate,
         correo: user.correo || "",
         telefono: user.telefono || "",
         direccion: user.direccion || ""

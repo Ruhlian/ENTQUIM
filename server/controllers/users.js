@@ -35,6 +35,8 @@ const login = async (req, res) => {
         }
 
         const user = results[0];
+        console.log(user); // Agrega esta línea para depurar
+
         const isMatch = await bcrypt.compare(contrasena, user.contrasena);
 
         if (!isMatch) {
@@ -59,6 +61,8 @@ const login = async (req, res) => {
                 nombre: user.nombre,
                 apellido: user.apellido,
                 correo: user.correo,
+                fecha_nacimiento: user.fecha_nacimiento, // Asegúrate de que este campo exista
+                telefono: user.telefono, // Asegúrate de que este campo exista
                 rol: user.id_rol,
             },
             message: 'Login exitoso',

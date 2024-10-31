@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import HeaderManagement from '../HeaderManagement/HeaderManagement';
 import SideBarNavigation from '../SideBarNavigation/SideBarNavigation';
 import Images from '../../utils/Images/Images';
+import { useAuth } from '../../context/AuthContext'; // Importa el contexto de autenticación
 
 const ManagementLayout = ({ children }) => {
   const location = useLocation();
-  
-  const accountMenu = [
+  const { user } = useAuth(); // Obtén el usuario del contexto de autenticación
+
+  // Define el menú de navegación
+  const accountMenu = useMemo(() => [
     { 
       name: 'Mi cuenta', 
       paths: ['/gestion-cuenta/mi-cuenta', '/gestion-cuenta'], 
@@ -20,8 +23,9 @@ const ManagementLayout = ({ children }) => {
       selectedIcon: Images.icons.paymentsselected, 
       unselectedIcon: Images.icons.paymentsunselected 
     },
-  ];
-  
+  ], []);
+
+  // Función para obtener la sección activa basada en la ruta
   const getInitialSection = () => {
     const activeMenuItem = accountMenu.find(item => 
       (item.paths && item.paths.includes(location.pathname)) || 
@@ -29,12 +33,12 @@ const ManagementLayout = ({ children }) => {
     );
     return activeMenuItem ? activeMenuItem.name : 'Mi cuenta';
   };
-  
+
   const [activeSection, setActiveSection] = useState(getInitialSection);
-  
+
   useEffect(() => {
     setActiveSection(getInitialSection());
-  }, [location.pathname]);
+  }, [location.pathname, accountMenu]);
 
   return (
     <div>
@@ -43,7 +47,11 @@ const ManagementLayout = ({ children }) => {
         menuNavigation={accountMenu}
         setActiveSection={setActiveSection}
         activeSection={activeSection}
-        user={{ name: 'Joan Fontecha', role: 'Administrador', avatar: Images.icons.personselected }}
+        user={{ 
+          avatar: Images.icons.personselected,
+          name: user?.nombre, // Asumiendo que tienes un avatar para el usuario
+          role: user?.id_rol === 1 ? 'Administrador' : user?.id_rol === 2 ? 'Empleado' : 'Cliente' 
+        }} // Solo pasa el avatar y rol
       />
       {children}
     </div>
