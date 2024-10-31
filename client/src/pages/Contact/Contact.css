@@ -1,30 +1,30 @@
 .contact-image__container {
-    width: 100%;
-    height: 400px;
-    background: linear-gradient(90deg, rgba(26,114,154,1) 24%, rgba(0,0,0,0) 100%), 
-                url(../../assets/images/contact/contacto.jpeg);
-    background-size: cover; 
-    background-position: center; 
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(90deg, rgba(26, 114, 154, 1) 24%, rgba(0, 0, 0, 0) 100%), 
+              url(../../assets/images/contact/contacto.jpeg);
+  background-size: cover; 
+  background-position: center; 
 }
 
 .contact-image-titles__container {
-    width: 400px;
-    position: absolute;
-    top: 30%;
-    left: 100px;
+  width: 400px;
+  position: absolute;
+  top: 30%;
+  left: 100px;
 }
 
 .contact-image-title {
-    font-size: 55px;
-    color: #c7effe;
-    font-weight: 400;
-    font-family: "Noto Serif", serif;
+  font-size: 55px;
+  color: #c7effe;
+  font-weight: 400;
+  font-family: "Noto Serif", serif;
 }
 
 .contact-image-subtitle {
-    font-size: 27px;
-    font-weight: 300;
-    color: #fff;
+  font-size: 27px;
+  font-weight: 300;
+  color: #fff;
 } 
 
 /* Estilos para el contenedor principal */
@@ -43,11 +43,11 @@
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-  max-width: 600px; /* Ajustar el ancho para acomodar las columnas */
+  max-width: 600px; /* Ancho máximo del formulario */
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dividir en dos columnas iguales */
-  gap: 20px;
+  grid-template-columns: 1fr 1fr; /* Dos columnas */
+  gap: 20px; /* Espacio entre columnas */
 }
 
 /* Estilos para los campos que ocupan 1 columna */
@@ -69,7 +69,7 @@
   color: #52c41a;
   font-size: 14px;
   margin-top: 10px;
-  grid-column: span 2; /* Asegura que el mensaje de éxito esté centrado y ocupe ambas columnas */
+  grid-column: span 2; /* Mensaje de éxito ocupa ambas columnas */
 }
 
 /* Estilo para los mensajes de error */
@@ -77,7 +77,7 @@
   color: #ff4d4f;
   font-size: 12px;
   margin-top: 5px;
-  grid-column: span 2; /* Asegura que el mensaje de error esté centrado y ocupe ambas columnas */
+  grid-column: span 2; /* Mensaje de error ocupa ambas columnas */
 }
 
 /* Estilos para los labels */
@@ -100,7 +100,7 @@
 }
 
 .contact-input:focus {
-  border-color: #1a729a;
+  border-color: #1a729a; /* Cambiar color al enfocar */
   outline: none;
 }
 
@@ -114,9 +114,15 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  grid-column: span 2; /* Hacer que el botón ocupe ambas columnas */
+  grid-column: span 2; /* Botón ocupa ambas columnas */
 }
 
 .contact-submit__btn:hover {
-  background-color: #155a7b;
+  background-color: #155a7b; /* Cambiar color al pasar el mouse */
+}
+
+/* Estilo adicional para el formulario al enviar */
+.contact-form__container .form-group input:disabled,
+.contact-form__container textarea:disabled {
+  background-color: #f0f0f0; /* Color de fondo cuando está deshabilitado */
 }

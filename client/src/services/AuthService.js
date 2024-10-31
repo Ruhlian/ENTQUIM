@@ -33,36 +33,43 @@ const AuthService = {
         }
     },
 
-    // Método para registrar un nuevo usuario
-    register: async (nombre, apellido, correo, contrasena) => {
-        console.log('Registrando nuevo usuario:', { nombre, apellido, correo, contrasena });
+// Método para registrar un nuevo usuario
+register: async (nombre, apellido, correo, contrasena, fecha_nacimiento, telefono) => {
+    console.log('Registrando nuevo usuario:', { nombre, apellido, correo, contrasena, fecha_nacimiento, telefono });
 
-        // Validaciones previas
-        if (!nombre || !apellido || !correo || !contrasena) {
-            throw new Error('Por favor, ingrese todos los campos requeridos.');
-        }
+    // Validaciones previas
+    if (!nombre || !apellido || !correo || !contrasena || !fecha_nacimiento || !telefono) {
+        throw new Error('Por favor, ingrese todos los campos requeridos.');
+    }
 
-        try {
-            const response = await api.post('/usuarios/register', { nombre, apellido, correo, contrasena });
-            console.log('Respuesta del servidor para registro:', response);
+    try {
+        const response = await api.post('/usuarios/register', {
+            nombre,
+            apellido,
+            correo,
+            contrasena,
+            fecha_nacimiento,
+            telefono
+        });
+        console.log('Respuesta del servidor para registro:', response);
 
-            if (response.status === 201) {
-                const { data } = response; // Desestructurando para obtener solo los datos
-                console.log('Registro exitoso, datos recibidos:', data);
-                
-                if (!data || !data.id_usuarios) {
-                    throw new Error('No se encontró el usuario en la respuesta.');
-                }
+        if (response.status === 201) {
+            const { data } = response; // Desestructurando para obtener solo los datos
+            console.log('Registro exitoso, datos recibidos:', data);
 
-                return data; // Devolvemos los datos del usuario
-            } else {
-                throw new Error('Error en el registro');
+            if (!data || !data.id_usuarios) {
+                throw new Error('No se encontró el usuario en la respuesta.');
             }
-        } catch (error) {
-            console.error('Error en el registro:', error);
-            throw AuthService.handleError(error, 'Error en el registro');
+
+            return data; // Devolvemos los datos del usuario
+        } else {
+            throw new Error('Error en el registro');
         }
-    },
+    } catch (error) {
+        console.error('Error en el registro:', error);
+        throw AuthService.handleError(error, 'Error en el registro');
+    }
+},
 
     // Método para solicitar el restablecimiento de contraseña
     requestPasswordReset: async (correo) => {

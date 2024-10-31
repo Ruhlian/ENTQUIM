@@ -82,10 +82,10 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const handleRegister = async (nombre, apellido, correo, contrasena) => {
+    const handleRegister = async (nombre, apellido, correo, contrasena, fecha_nacimiento, telefono) => {
         setLoading(true);
         try {
-            const response = await AuthService.register(nombre, apellido, correo, contrasena);
+            const response = await AuthService.register(nombre, apellido, correo, contrasena, fecha_nacimiento, telefono);
             if (response && response.id_usuarios) {
                 showToast('Registro exitoso. Puedes iniciar sesión ahora.', 'success');
                 navigate('/Iniciar-Sesion'); // Redirigir a la página de inicio de sesión
@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    };    
+    };        
 
     const handleLogout = async () => {
         setLoading(true);

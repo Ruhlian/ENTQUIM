@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import './Contact.css';
+import ContactService from '../../services/ContactService'; // Asegúrate de que la ruta sea correcta
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,10 @@ const Contact = () => {
 
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Estado para manejar errores
+
+  const [isWaiting, setIsWaiting] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(0);
 
   const validateField = (name, value) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -107,20 +112,49 @@ const Contact = () => {
 
     setErrors(validationErrors);
 
-    // const hasErrors = Object.values(validationErrors).some((error) => error);
-    // if (!hasErrors) {
-    //   try {
-    //     const response = await apiContact.post("/enviar-correo", formData); // Enviar los datos al backend
-    //     if (response.status === 200) {
-    //       setSuccessMessage("El correo se ha enviado exitosamente");
-    //     } else {
-    //       setSuccessMessage("Hubo un problema al enviar el correo");
-    //     }
-    //   } catch (error) {
-    //     setSuccessMessage("Error al enviar el correo");
-    //     console.error("Error en la solicitud de correo", error);
-    //   }
-    // }
+    const hasErrors = Object.values(validationErrors).some((error) => error);
+    if (!hasErrors) {
+      try {
+        const response = await ContactService.enviarMensaje(formData); // Enviar los datos al backend
+        setSuccessMessage("El correo se ha enviado exitosamente");
+        setErrorMessage(""); // Restablecer el mensaje de error
+
+        // Iniciar el temporizador de espera
+        setIsWaiting(true);
+        setRemainingTime(300); // 5 minutos en segundos
+        const interval = setInterval(() => {
+          setRemainingTime((prev) => {
+            if (prev <= 1) {
+              clearInterval(interval);
+              setIsWaiting(false);
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000); // Actualiza cada segundo
+
+        // Restablecer el formulario si es necesario
+        setFormData({
+          nombre: "",
+          apellido: "",
+          correo: "",
+          telefono: "",
+          ciudad: "",
+          pais: "",
+          mensaje: ""
+        });
+
+      } catch (error) {
+        if (error.response && error.response.status === 429) {
+          // Manejar el caso de que el usuario deba esperar
+          setErrorMessage(error.response.data.message);
+          // No mostrar el toast
+        } else {
+          setErrorMessage("Hubo un problema al enviar el correo");
+        }
+        console.error("Error en la solicitud de correo", error);
+      }
+    }
   };
 
   return (
@@ -131,7 +165,6 @@ const Contact = () => {
           <h3 className="contact-image-subtitle">Atenderemos sus dudas con gusto.</h3>
         </div>
       </div>
-
 
       <div className="contact-main__container">
         <form className="contact-form__container" onSubmit={handleSubmit}>
@@ -226,14 +259,12 @@ const Contact = () => {
           </div>
 
           {successMessage && <p className="success-message">{successMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Mensaje de error */}
 
-          <button type="submit" className="contact-submit__btn">
+          <button type="submit" className="contact-submit__btn" disabled={isWaiting}>
             Enviar
           </button>
         </form>
-      </div>
-      <div>
-
       </div>
     </>
   );

@@ -19,6 +19,7 @@ npm install react-icons
 npm install chart.js
 npm install dotenv 
 npm install @mui/material @emotion/react @emotion/styled
+npm install react-datepicker
 
 TRAER EL REPOSITORIO DE GITHUB (cmd):
 abrir una nueva cmd
