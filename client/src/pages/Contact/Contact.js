@@ -168,7 +168,7 @@ const Contact = () => {
 
       <div className="contact-main__container">
         <form className="contact-form__container" onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className="contact-form-group">
             <label htmlFor="nombre">Nombre</label>
             <input
               type="text"
@@ -181,7 +181,7 @@ const Contact = () => {
             {errors.nombre && <p className="error-message">{errors.nombre}</p>}
           </div>
 
-          <div className="form-group">
+          <div className="contact-form-group">
             <label htmlFor="apellido">Apellido</label>
             <input
               type="text"
@@ -194,7 +194,7 @@ const Contact = () => {
             {errors.apellido && <p className="error-message">{errors.apellido}</p>}
           </div>
 
-          <div className="form-group">
+          <div className="contact-form-group">
             <label htmlFor="correo">Correo</label>
             <input
               type="email"
@@ -207,7 +207,7 @@ const Contact = () => {
             {errors.correo && <p className="error-message">{errors.correo}</p>}
           </div>
 
-          <div className="form-group">
+          <div className="contact-form-group">
             <label htmlFor="telefono">Teléfono</label>
             <input
               type="text"
@@ -220,7 +220,7 @@ const Contact = () => {
             {errors.telefono && <p className="error-message">{errors.telefono}</p>}
           </div>
 
-          <div className="form-group">
+          <div className="contact-form-group">
             <label htmlFor="ciudad">Ciudad</label>
             <input
               type="text"
@@ -233,7 +233,7 @@ const Contact = () => {
             {errors.ciudad && <p className="error-message">{errors.ciudad}</p>}
           </div>
 
-          <div className="form-group">
+          <div className="contact-form-group">
             <label htmlFor="pais">País</label>
             <input
               type="text"
@@ -246,7 +246,7 @@ const Contact = () => {
             {errors.pais && <p className="error-message">{errors.pais}</p>}
           </div>
 
-          <div className="form-group">
+          <div className="contact-form-group">
             <label htmlFor="mensaje">Mensaje</label>
             <textarea
               name="mensaje"

@@ -42,4 +42,14 @@ api.interceptors.response.use(
   }
 );
 
+export const addPaymentMethod = async (paymentData) => {
+  try {
+    const response = await api.post('/metodos-pago', paymentData); // Ruta de la API en el backend
+    return response.data;
+  } catch (error) {
+    console.error('Error al añadir el método de pago:', error);
+    throw error;
+  }
+};
+
 export default api;

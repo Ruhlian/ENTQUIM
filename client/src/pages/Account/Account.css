@@ -9,23 +9,20 @@
     gap: 10px;
 }
 
-.form-group {
+.account-form-section {
+  width: 100%;
+}
+
+.account-form-group {
     display: flex;
     flex-direction: column;
     flex: 1 1 200px;
   }
   
-  
-  .form-group input:focus {
-    border-color: #11809E;
-  }
-  
-  .readonly-input {
-    background-color: #f9f9f9;
-    color: #aaa;
-    cursor: not-allowed;
-  }
-  
+.account-form-group input {
+  width: 100%;
+}
+
   /* Estilos para los botones */
   .cancel-btn,
   .save-btn {

@@ -51,7 +51,7 @@
 }
 
 /* Estilos para los campos que ocupan 1 columna */
-.contact-form__container .form-group {
+.contact-form__container .contact-form-group {
   display: flex;
   flex-direction: column;
 }

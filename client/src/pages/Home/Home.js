@@ -1,45 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importar el hook useNavigate
-import axios from "axios";
+import React from "react";
 import './Home.css';
 import Images from "../../utils/Images/Images";
 import HomeCarousel from "../../components/HomeCarousel/HomeCarousel";
 import MarketCompes from "../../components/MarketCompes/MarketCompes";
 
-// Función para formatear precios
-const formatearPrecio = (precio) => {
-    return new Intl.NumberFormat('es-CO', {
-        style: 'currency',
-        currency: 'COP',
-        minimumFractionDigits: 3
-    }).format(precio);
-};
-
 const Home = () => {
-    const [producto1, setProducto1] = useState(null);
-    const [producto66f8, setProducto66f8] = useState(null);
-    // const { addToCart } = useCart(); 
-    const navigate = useNavigate(); // Hook para la navegación
-
-    useEffect(() => {
-        // Llamada a la API para obtener los productos
-        axios.get('http://localhost:3001/productos')
-            .then(response => {
-                const producto1 = response.data.find(producto => producto.id === "1");
-                setProducto1(producto1);
-
-                const producto66f8 = response.data.find(producto => producto.id === '66f8');
-                setProducto66f8(producto66f8);
-            })
-            .catch(error => {
-                console.error("Error al obtener los productos: ", error);
-            });
-    }, []);
-
-    // Función para manejar el click en la imagen y redirigir
-    const handleImageClick = (productoId) => {
-        navigate(`/ProductDetails/${productoId}`);
-    };
 
     return (
         <>
@@ -69,7 +34,6 @@ const Home = () => {
                                         className="product-content__image" 
                                         src={Images.products.delmetrin250} 
                                         alt='DELMETRIN 2.50EC' 
-                                        onClick={() => handleImageClick(producto66f8.id)}
                                         style={{ cursor: 'pointer' }}
                                     />
                                     <p className="product-content__price">$19.700 COP</p>

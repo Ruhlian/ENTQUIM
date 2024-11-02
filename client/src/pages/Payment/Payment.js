@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './Payment.css';
+import Images from '../../utils/Images/Images';
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const paths = [
   { name: 'Gestión de cuenta', link: '/gestion-cuenta' },
@@ -9,8 +11,10 @@ const paths = [
 ];
 
 const Payment = () => {
+  const { user } = useAuth(); // Obtener el usuario logueado del contexto de autenticación
   const [searchTerm, setSearchTerm] = useState("");
   const [showActions, setShowActions] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState([]); // Estado para métodos de pago
 
   const paymentHistory = [
     { id: 1234, date: '22/10/2024', total: 45.00 },
@@ -27,45 +31,77 @@ const Payment = () => {
     setShowActions(!showActions);
   };
 
+  // Función para obtener los métodos de pago del usuario logueado
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        const response = await fetch('http://localhost:3002/api/metodos-pago/user', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+    
+        // Verificar si la respuesta es JSON
+        const contentType = response.headers.get("content-type");
+        if (response.ok && contentType && contentType.includes("application/json")) {
+          const methods = await response.json();
+          setPaymentMethods(methods);
+        } else {
+          // Imprimir el texto completo de la respuesta para entender el error
+          const errorText = await response.text();
+          console.error("Error al obtener métodos de pago:", errorText);
+        }
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+      }
+    };
+    
+
+    if (user) {
+      fetchPaymentMethods();
+    }
+  }, [user]);
+
   return (
     <div className="account-payment">
       <Breadcrumbs paths={paths} />
       <div className="payment-container">
         <div className="payment-page">
           <div className="payment-header"></div>
-          
+
           <div className="payment-methods">
-            <h3>Métodos de pago</h3>
+            <h3 className="payment-methods-title">Métodos de pago</h3>
             <div className="methods-container">
-              <div className="card-method">
-
-              <div className="card-actions">
-                  <button onClick={toggleActions}>Acciones ▼</button>
-                  {showActions && (
-                    <div className="actions-menu">
-                      <button onClick={() => alert("Editar método")}>Editar</button>
-                      <button onClick={() => alert("Eliminar método")}>Eliminar</button>
-                    </div>
-                  )}
+              {paymentMethods.map((method) => (
+                <div key={method.id_metodo_pago} className="card-method">
+                  <div className="card-actions">
+                    <button onClick={toggleActions}>Acciones ▼</button>
+                    {showActions && (
+                      <div className="actions-menu">
+                        <button onClick={() => alert("Editar método")}>Editar</button>
+                        <button onClick={() => alert("Eliminar método")}>Eliminar</button>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="card-type">
+                    <p>{method.tipo_tarjeta || "Tarjeta de crédito"}</p>
+                  </div>
+                  <div className="card-info">
+                    <p>**** {method.numero_tarjeta.slice(-4)} Expira {method.mm_aa}</p>
+                    <p>{method.nombre_titular}</p>
+                  </div>
                 </div>
-                
-                <div className="card-type">
-                  <p>Card type</p>
-                </div>
-                <div className="card-info">
-                  <p>**** 1241 Expira 08/28</p>
-                  <p>Joan Fontecha</p>
-                </div>
-
-              </div>
+              ))}
               <div className="add-method">
-                <Link to="/gestion-cuenta/pagos/nuevo-metodo">Añadir Método de Pago</Link> {/* Enlace actualizado */}
+                <Link to="/gestion-cuenta/pagos/nuevo-metodo">Añadir Método de Pago</Link>
               </div>
             </div>
           </div>
 
           <div className="payment-content">
-            <h3>Historial de Compras</h3>
+            <h3 className="payment-methods-title">Historial de Compras</h3>
             <div className="search-bar">
               <input 
                 type="text" 

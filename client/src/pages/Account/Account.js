@@ -12,46 +12,40 @@ const AccountInfo = () => {
   ];
 
   const { user } = useAuth();
-  const [formValues, setFormValues] = useState({
-    nombre: "",
-    apellido: "",
-    fechaNacimiento: "",
-    correo: "",
-    telefono: "",
-    direccion: ""
-  });
+  const initialValues = {
+    nombre: user?.nombre || "",
+    apellido: user?.apellido || "",
+    fechaNacimiento: user?.fecha_nacimiento ? user.fecha_nacimiento.split('T')[0] : "",
+    correo: user?.correo || "",
+    telefono: user?.telefono || "",
+    direccion: user?.direccion || ""
+  };
 
-  const [errors, setErrors] = useState({
-    nombre: "",
-    apellido: "",
-    fechaNacimiento: "",
-    correo: "",
-    telefono: "",
-    direccion: ""
-  });
+  const [formValues, setFormValues] = useState(initialValues);
+  const [errors, setErrors] = useState({});
+  const [showActionsBasicInfo, setShowActionsBasicInfo] = useState(false);
+  const [showActionsContactInfo, setShowActionsContactInfo] = useState(false);
 
   useEffect(() => {
-    // Si existe un usuario, se actualizan los valores del formulario con su información
-    if (user) {
-      // Formatear la fecha de nacimiento en el formato YYYY-MM-DD
-      const formattedDate = user.fecha_nacimiento ? user.fecha_nacimiento.split('T')[0] : "";
-      setFormValues({
-        nombre: user.nombre || "",
-        apellido: user.apellido || "",
-        fechaNacimiento: formattedDate,
-        correo: user.correo || "",
-        telefono: user.telefono || "",
-        direccion: user.direccion || ""
-      });
-    }
+    setFormValues(initialValues);
   }, [user]);
+
+  const handleSectionChange = (section) => {
+    const hasChanges = Object.keys(formValues).some(
+      (key) => formValues[key] !== initialValues[key]
+    );
+    if (section === "basicInfo") {
+      setShowActionsBasicInfo(hasChanges);
+    } else if (section === "contactInfo") {
+      setShowActionsContactInfo(hasChanges);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     const today = new Date();
     const currentYear = today.getFullYear();
 
-    // Validaciones de fecha de nacimiento
     if (name === "fechaNacimiento") {
       const birthDate = value ? new Date(value) : null;
       if (birthDate && birthDate.getFullYear() > currentYear) {
@@ -63,7 +57,6 @@ const AccountInfo = () => {
       }
     }
 
-    // Actualizar valores del formulario
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
@@ -100,11 +93,28 @@ const AccountInfo = () => {
       ...prevErrors,
       [name]: error,
     }));
+
+    // Llama a handleSectionChange para actualizar el estado showActions por sección
+    if (["nombre", "apellido", "fechaNacimiento"].includes(name)) {
+      handleSectionChange("basicInfo");
+    } else if (["correo", "telefono", "direccion"].includes(name)) {
+      handleSectionChange("contactInfo");
+    }
   };
 
   const handleInput = (e, pattern) => {
     if (!new RegExp(pattern).test(e.target.value) && e.nativeEvent.inputType !== "deleteContentBackward") {
       e.target.value = e.target.value.slice(0, -1);
+    }
+  };
+
+  const handleCancel = (section) => {
+    // Restaura los valores iniciales y oculta los botones de acción
+    setFormValues(initialValues);
+    if (section === "basicInfo") {
+      setShowActionsBasicInfo(false);
+    } else if (section === "contactInfo") {
+      setShowActionsContactInfo(false);
     }
   };
 
@@ -116,14 +126,16 @@ const AccountInfo = () => {
         <InfoCard
           title="Información Básica"
           actions={
-            <>
-              <button className="cancel-btn">Cancelar</button>
-              <button className="save-btn" disabled={Object.values(errors).some(error => error !== "")}>Guardar</button>
-            </>
+            showActionsBasicInfo && (
+              <>
+                <button className="cancel-btn" onClick={() => handleCancel("basicInfo")}>Cancelar</button>
+                <button className="save-btn" disabled={Object.values(errors).some(error => error !== "")}>Guardar</button>
+              </>
+            )
           }
         >
-          <div className="form-section">
-            <div className="form-group">
+          <div className="account-form-section">
+            <div className="account-form-group">
               <TextField 
                 id="outlined-nombre" 
                 label="Nombre" 
@@ -139,7 +151,7 @@ const AccountInfo = () => {
                 helperText={errors.nombre}
               />
             </div>
-            <div className="form-group">
+            <div className="account-form-group">
               <TextField 
                 id="outlined-apellido" 
                 label="Apellido" 
@@ -155,14 +167,14 @@ const AccountInfo = () => {
                 helperText={errors.apellido}
               />
             </div>
-            <div className="form-group">
+            <div className="account-form-group">
               <TextField
                 id="outlined-fecha-nacimiento"
                 label="Fecha de Nacimiento"
                 type="date"
                 variant="outlined"
                 size="small"
-                margin="normal"
+                margin="dense"
                 name="fechaNacimiento"
                 value={formValues.fechaNacimiento}
                 onChange={handleChange}
@@ -178,10 +190,17 @@ const AccountInfo = () => {
 
         <InfoCard
           title="Información de Contacto"
-          actions={null}
+          actions={
+            showActionsContactInfo && (
+              <>
+                <button className="cancel-btn" onClick={() => handleCancel("contactInfo")}>Cancelar</button>
+                <button className="save-btn" disabled={Object.values(errors).some(error => error !== "")}>Guardar</button>
+              </>
+            )
+          }
         >
           <div className="form-section">
-            <div className="form-group">
+            <div className="account-form-group">
               <TextField 
                 id="outlined-correo" 
                 label="Correo Electrónico" 
@@ -191,12 +210,13 @@ const AccountInfo = () => {
                 name="correo"
                 value={formValues.correo}
                 onChange={handleChange}
-                inputProps={{ maxLength: 50 }}
+                inputProps={{ maxLength: 50, readOnly: true }}
                 error={Boolean(errors.correo)}
                 helperText={errors.correo}
+                onFocus={(e) => e.target.blur()}
               />
             </div>
-            <div className="form-group">
+            <div className="account-form-group">
               <TextField 
                 id="outlined-telefono" 
                 label="Teléfono" 
@@ -212,7 +232,7 @@ const AccountInfo = () => {
                 helperText={errors.telefono}
               />
             </div>
-            <div className="form-group">
+            <div className="account-form-group">
               <TextField 
                 id="outlined-direccion" 
                 label="Dirección" 

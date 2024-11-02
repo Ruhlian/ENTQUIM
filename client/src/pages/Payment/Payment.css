@@ -7,52 +7,46 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  padding: 0px 20px;
 }
 
 .payment-page {
   width: 100%;
-  max-width: 1000px; /* Aumenta el ancho máximo del contenedor */
-  padding: 30px;
-  border-radius: 10px;
-  background-color: #fffdfd;
-}
-
-.payment-header h2 {
-  font-size: 1.2em;
-  color: #333;
-  margin-bottom: 20px;
+  background-color: #fff;
 }
 
 .payment-methods {
   margin-bottom: 30px;
+  padding: 15px 20px;
 }
 
-.payment-methods h3 {
-  font-size: 1.1em;
-  color: #333;
-  margin-bottom: 10px;
+.payment-methods-title {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 25px;
 }
 
 .methods-container {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Limita a 2 columnas */
+  gap: 15px;
+  justify-content: center;
+  width: 100%;
 }
 
 .card-method {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid #d0d0d0;
+  border: 1px solid #1A729A25;
   border-radius: 8px;
   padding: 10px 25px;
-  width: 45%; /* Ocupa más espacio */
   transition: box-shadow 0.3s ease;
   position: relative;
 }
 
 .card-type {
-  border: 1px solid #d0d0d0;
+  border: 1px solid #1A729A50;
   border-radius: 4px;
   padding: 10px 15px;
   text-align: center;
@@ -72,16 +66,10 @@
   margin: 5px 0;
 }
 
-.card-actions {
-  text-align: right;
-  margin-top: 10px;
-  margin-bottom: 15px;
-}
-
 .card-actions button {
   background: none;
   border: none;
-  color: #007BFF;
+  color: #000;
   cursor: pointer;
   font-size: 14px;
 }
@@ -90,31 +78,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px dashed #007BFF;
+  border: 2px dashed #1A729A50;
   border-radius: 8px;
-  width: 45%; /* Ocupa más espacio */
   padding: 20px;
   cursor: pointer;
   text-align: center;
 }
 
-.add-method button {
-  background: none;
-  border: none;
-  color: #007BFF;
-  font-size: 16px;
-  cursor: pointer;
-}
-
 .payment-content {
   background: white;
-  padding: 15px;
+  padding: 15px 20px;
   border-radius: 8px;
   margin-top: 20px;
-}
-
-.payment-content h3 {
-  margin-bottom: 15px;
 }
 
 .search-bar {
@@ -148,10 +123,11 @@
 }
 
 .payment-item {
-  background: #e0e0e0;
+  background: #f3f3f3;
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
+  min-height: 100px;
 }
 
 .actions-menu {
