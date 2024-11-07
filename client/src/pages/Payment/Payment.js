@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import './Payment.css';
-import Images from '../../utils/Images/Images';
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';

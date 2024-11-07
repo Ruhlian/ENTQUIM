@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem('user', JSON.stringify(data.user));
                 localStorage.setItem('token', data.token);
                 showToast('Inicio de sesión exitoso!', 'success');
-                navigate('/'); // Cambia '/' por la ruta a la que quieras redirigir
+                navigate('/');
             } else {
                 showToast('No se encontró el usuario en la respuesta.', 'error');
             }
@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
             const response = await AuthService.register(nombre, apellido, correo, contrasena, fecha_nacimiento, telefono);
             if (response && response.id_usuarios) {
                 showToast('Registro exitoso. Puedes iniciar sesión ahora.', 'success');
-                navigate('/Iniciar-Sesion'); // Redirigir a la página de inicio de sesión
+                navigate('/Iniciar-Sesion');
             } else {
                 showToast('No se encontró el usuario en la respuesta.', 'error');
             }
@@ -121,8 +121,13 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     };
 
+    const updateUser = (updatedUser) => {
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+    };
+    
     return (
-        <AuthContext.Provider value={{ user, handleLogin, handleLogout, handleRegister, loading }}>
+        <AuthContext.Provider value={{ user, handleLogin, handleLogout, handleRegister, updateUser, loading }}>
             {children}
         </AuthContext.Provider>
     );

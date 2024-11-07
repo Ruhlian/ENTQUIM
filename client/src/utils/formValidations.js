@@ -1,5 +1,3 @@
-// src/utils/formValidations.js
-// src/utils/formValidations.js
 export const validateCardNumber = (cardNumber) => {
     return /^\d{16}$/.test(cardNumber); // Solo permite 16 dígitos
   };

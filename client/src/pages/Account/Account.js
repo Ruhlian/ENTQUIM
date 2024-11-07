@@ -11,28 +11,38 @@ const AccountInfo = () => {
     { name: 'Información Personal', link: '/mi-cuenta' }
   ];
 
-  const { user } = useAuth();
-  const initialValues = {
-    nombre: user?.nombre || "",
-    apellido: user?.apellido || "",
-    fechaNacimiento: user?.fecha_nacimiento ? user.fecha_nacimiento.split('T')[0] : "",
-    correo: user?.correo || "",
-    telefono: user?.telefono || "",
-    direccion: user?.direccion || ""
-  };
+  const { user, updateUser } = useAuth();
 
-  const [formValues, setFormValues] = useState(initialValues);
+  const [formValues, setFormValues] = useState({
+    nombre: "",
+    apellido: "",
+    fechaNacimiento: "",
+    correo: "",
+    telefono: "",
+    direccion: ""
+  });
+
   const [errors, setErrors] = useState({});
   const [showActionsBasicInfo, setShowActionsBasicInfo] = useState(false);
   const [showActionsContactInfo, setShowActionsContactInfo] = useState(false);
+  const [isVerifyingPassword, setIsVerifyingPassword] = useState(false);
+  const [password, setPassword] = useState("");
 
+  // Sincroniza formValues con el usuario actual al cargar o actualizar el usuario
   useEffect(() => {
-    setFormValues(initialValues);
+    setFormValues({
+      nombre: user?.nombre || "",
+      apellido: user?.apellido || "",
+      fechaNacimiento: user?.fecha_nacimiento ? user.fecha_nacimiento.split('T')[0] : "",
+      correo: user?.correo || "",
+      telefono: user?.telefono || "",
+      direccion: user?.direccion || ""
+    });
   }, [user]);
 
   const handleSectionChange = (section) => {
     const hasChanges = Object.keys(formValues).some(
-      (key) => formValues[key] !== initialValues[key]
+      (key) => formValues[key] !== (user[key] || "")
     );
     if (section === "basicInfo") {
       setShowActionsBasicInfo(hasChanges);
@@ -94,7 +104,6 @@ const AccountInfo = () => {
       [name]: error,
     }));
 
-    // Llama a handleSectionChange para actualizar el estado showActions por sección
     if (["nombre", "apellido", "fechaNacimiento"].includes(name)) {
       handleSectionChange("basicInfo");
     } else if (["correo", "telefono", "direccion"].includes(name)) {
@@ -109,8 +118,14 @@ const AccountInfo = () => {
   };
 
   const handleCancel = (section) => {
-    // Restaura los valores iniciales y oculta los botones de acción
-    setFormValues(initialValues);
+    setFormValues({
+      nombre: user?.nombre || "",
+      apellido: user?.apellido || "",
+      fechaNacimiento: user?.fecha_nacimiento ? user.fecha_nacimiento.split('T')[0] : "",
+      correo: user?.correo || "",
+      telefono: user?.telefono || "",
+      direccion: user?.direccion || ""
+    });
     if (section === "basicInfo") {
       setShowActionsBasicInfo(false);
     } else if (section === "contactInfo") {
@@ -118,88 +133,173 @@ const AccountInfo = () => {
     }
   };
 
+  const handleSave = (section) => {
+    setIsVerifyingPassword(true);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfirmPassword = async () => {
+    try {
+        const token = user?.token || localStorage.getItem("token");
+        if (!token) {
+            alert("No se ha encontrado el token de autenticación.");
+            return;
+        }
+
+        const passwordVerificationResponse = await fetch("http://localhost:3002/api/usuarios/verificar-contrasena", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ password }),
+        });
+
+        if (passwordVerificationResponse.ok) {
+            const updateResponse = await fetch("http://localhost:3002/api/usuarios/actualizar", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                body: JSON.stringify(formValues),
+            });
+
+            if (updateResponse.ok) {
+                const updatedUser = await updateResponse.json();
+                updateUser(updatedUser);  // Aquí sincronizamos el estado global del usuario
+
+                setFormValues({
+                    nombre: updatedUser.nombre || "",
+                    apellido: updatedUser.apellido || "",
+                    fechaNacimiento: updatedUser.fecha_nacimiento ? updatedUser.fecha_nacimiento.split('T')[0] : "",
+                    correo: updatedUser.correo || "",
+                    telefono: updatedUser.telefono || "",
+                    direccion: updatedUser.direccion || ""
+                });
+
+                setIsVerifyingPassword(false);
+                setPassword("");
+                alert("Datos actualizados con éxito.");
+            } else {
+                alert("Error al actualizar los datos.");
+            }
+        } else {
+            alert("Contraseña incorrecta.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Ocurrió un error al intentar actualizar los datos.");
+    }
+};
+
+
   return (
     <div className="account-info">
       <Breadcrumbs paths={paths} />
 
       <div className="account-info__cards-container">
         <InfoCard
-          title="Información Básica"
+          title={isVerifyingPassword ? "Verificación de Contraseña" : "Información Básica"}
           actions={
-            showActionsBasicInfo && (
+            isVerifyingPassword ? (
               <>
-                <button className="cancel-btn" onClick={() => handleCancel("basicInfo")}>Cancelar</button>
-                <button className="save-btn" disabled={Object.values(errors).some(error => error !== "")}>Guardar</button>
+                <button className="cancel-btn" onClick={() => setIsVerifyingPassword(false)}>Cancelar</button>
+                <button className="save-btn" onClick={handleConfirmPassword} disabled={!password}>Guardar</button>
               </>
+            ) : (
+              showActionsBasicInfo && (
+                <>
+                  <button className="cancel-btn" onClick={() => handleCancel("basicInfo")}>Cancelar</button>
+                  <button className="save-btn" onClick={() => handleSave("basicInfo")} disabled={Object.values(errors).some(error => error !== "")}>Siguiente</button>
+                </>
+              )
             )
           }
         >
-          <div className="account-form-section">
-            <div className="account-form-group">
-              <TextField 
-                id="outlined-nombre" 
-                label="Nombre" 
-                variant="outlined" 
-                size="small"
-                margin="dense"
-                name="nombre"
-                value={formValues.nombre}
-                onInput={(e) => handleInput(e, "^[A-Za-zÁÉÍÓÚáéíóúñÑ\\s]*$")}
-                onChange={handleChange}
-                inputProps={{ maxLength: 30 }}
-                error={Boolean(errors.nombre)}
-                helperText={errors.nombre}
-              />
+          {isVerifyingPassword ? (
+            <div className="account-form-section">
+              <div className="account-form-group">
+                <TextField
+                  id="outlined-password"
+                  label="Contraseña"
+                  type="password"
+                  variant="outlined"
+                  size="small"
+                  margin="dense"
+                  value={password}
+                  onChange={handlePasswordChange}
+                />
+              </div>
             </div>
-            <div className="account-form-group">
-              <TextField 
-                id="outlined-apellido" 
-                label="Apellido" 
-                variant="outlined" 
-                size="small"
-                margin="dense"
-                name="apellido"
-                value={formValues.apellido}
-                onInput={(e) => handleInput(e, "^[A-Za-zÁÉÍÓÚáéíóúñÑ\\s]*$")}
-                onChange={handleChange}
-                inputProps={{ maxLength: 30 }}
-                error={Boolean(errors.apellido)}
-                helperText={errors.apellido}
-              />
+          ) : (
+            <div className="account-form-section">
+              <div className="account-form-group">
+                <TextField 
+                  id="outlined-nombre" 
+                  label="Nombre" 
+                  variant="outlined" 
+                  size="small"
+                  margin="dense"
+                  name="nombre"
+                  value={formValues.nombre}
+                  onInput={(e) => handleInput(e, "^[A-Za-zÁÉÍÓÚáéíóúñÑ\\s]*$")}
+                  onChange={handleChange}
+                  inputProps={{ maxLength: 30 }}
+                  error={Boolean(errors.nombre)}
+                  helperText={errors.nombre}
+                />
+              </div>
+              <div className="account-form-group">
+                <TextField 
+                  id="outlined-apellido" 
+                  label="Apellido" 
+                  variant="outlined" 
+                  size="small"
+                  margin="dense"
+                  name="apellido"
+                  value={formValues.apellido}
+                  onInput={(e) => handleInput(e, "^[A-Za-zÁÉÍÓÚáéíóúñÑ\\s]*$")}
+                  onChange={handleChange}
+                  inputProps={{ maxLength: 30 }}
+                  error={Boolean(errors.apellido)}
+                  helperText={errors.apellido}
+                />
+              </div>
+              <div className="account-form-group">
+                <TextField
+                  id="outlined-fecha-nacimiento"
+                  label="Fecha de Nacimiento"
+                  type="date"
+                  variant="outlined"
+                  size="small"
+                  margin="dense"
+                  name="fechaNacimiento"
+                  value={formValues.fechaNacimiento}
+                  onChange={handleChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  error={Boolean(errors.fechaNacimiento)}
+                  helperText={errors.fechaNacimiento}
+                />
+              </div>
             </div>
-            <div className="account-form-group">
-              <TextField
-                id="outlined-fecha-nacimiento"
-                label="Fecha de Nacimiento"
-                type="date"
-                variant="outlined"
-                size="small"
-                margin="dense"
-                name="fechaNacimiento"
-                value={formValues.fechaNacimiento}
-                onChange={handleChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                error={Boolean(errors.fechaNacimiento)}
-                helperText={errors.fechaNacimiento}
-              />
-            </div>
-          </div>
+          )}
         </InfoCard>
 
-        <InfoCard
-          title="Información de Contacto"
-          actions={
-            showActionsContactInfo && (
-              <>
-                <button className="cancel-btn" onClick={() => handleCancel("contactInfo")}>Cancelar</button>
-                <button className="save-btn" disabled={Object.values(errors).some(error => error !== "")}>Guardar</button>
-              </>
-            )
-          }
-        >
-          <div className="form-section">
+        <InfoCard title="Información de Contacto" actions={
+          showActionsContactInfo && (
+            <>
+              <button className="cancel-btn" onClick={() => handleCancel("contactInfo")}>Cancelar</button>
+              <button className="save-btn" onClick={() => handleSave("contactInfo")} disabled={Object.values(errors).some(error => error !== "")}>Guardar</button>
+            </>
+          )
+        }>
+          <div className="account-form-section">
             <div className="account-form-group">
               <TextField 
                 id="outlined-correo" 
@@ -210,10 +310,9 @@ const AccountInfo = () => {
                 name="correo"
                 value={formValues.correo}
                 onChange={handleChange}
-                inputProps={{ maxLength: 50, readOnly: true }}
+                inputProps={{ maxLength: 50 }}
                 error={Boolean(errors.correo)}
                 helperText={errors.correo}
-                onFocus={(e) => e.target.blur()}
               />
             </div>
             <div className="account-form-group">
@@ -225,11 +324,8 @@ const AccountInfo = () => {
                 margin="dense"
                 name="telefono"
                 value={formValues.telefono}
-                onInput={(e) => handleInput(e, "^[0-9]*$")}
                 onChange={handleChange}
-                inputProps={{ maxLength: 10 }}
-                error={Boolean(errors.telefono)}
-                helperText={errors.telefono}
+                inputProps={{ maxLength: 15 }}
               />
             </div>
             <div className="account-form-group">

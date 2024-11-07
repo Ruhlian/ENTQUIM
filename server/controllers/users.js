@@ -44,7 +44,11 @@ const login = async (req, res) => {
         }
 
         // Generar un token que expire en 1 hora
-        const token = jwt.sign({ id: user.id_usuarios, rol: user.id_rol }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign(
+            { id: user.id_usuarios, rol: user.id_rol }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: '1h' }
+        );        
         const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // Expira en 1 hora
 
         // Insertar el token en la base de datos
@@ -141,9 +145,10 @@ const register = async (req, res) => {
 
         const { insertId } = await new Promise((resolve, reject) => {
             const query = `
-                INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol, fecha_nacimiento, telefono) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            `;
+                    INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol, fecha_nacimiento, telefono) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                `;
+
             connection.query(query, [correo, hashedPassword, nombre, apellido, roleId, fecha_nacimiento, telefono], (err, results) => {
                 if (err) return reject(err);
                 resolve(results);
@@ -262,6 +267,93 @@ const invalidateToken = async (req, res) => {
     }
 };
 
+// Verifica la contraseña del usuario
+const verifyPassword = async (req, res) => {
+    const { password } = req.body;
+    const userId = req.user.id;
+  
+    const query = 'SELECT contrasena FROM Usuarios WHERE id_usuarios = ?';
+    connection.query(query, [userId], async (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: 'Error en la base de datos.' });
+      }
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'Usuario no encontrado.' });
+      }
+  
+      const user = results[0];
+      const isMatch = await bcrypt.compare(password, user.contrasena);
+  
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Contraseña incorrecta.' });
+      }
+  
+      res.json({ message: 'Contraseña verificada correctamente.' });
+    });
+  };
+
+// Actualizar información de un usuario autenticado
+const updateUser = async (req, res) => {
+    const userId = req.user.id; // Obtener el ID del usuario desde el token decodificado
+    const { nombre, apellido, correo, fecha_nacimiento, telefono } = req.body;
+
+    // Construir los campos para actualizar dinámicamente
+    let fieldsToUpdate = [];
+    let values = [];
+
+    if (nombre) {
+        fieldsToUpdate.push("nombre = ?");
+        values.push(nombre);
+    }
+    if (apellido) {
+        fieldsToUpdate.push("apellido = ?");
+        values.push(apellido);
+    }
+    if (correo) {
+        fieldsToUpdate.push("correo = ?");
+        values.push(correo);
+    }
+    if (fecha_nacimiento) {
+        fieldsToUpdate.push("fecha_nacimiento = ?");
+        values.push(fecha_nacimiento);
+    }
+    if (telefono) {
+        fieldsToUpdate.push("telefono = ?");
+        values.push(telefono);
+    }
+
+    // Verificar si hay campos para actualizar
+    if (fieldsToUpdate.length === 0) {
+        return res.status(400).json({ error: 'No se enviaron campos para actualizar.' });
+    }
+
+    // Añadir el userId al final de los valores
+    values.push(userId);
+
+    // Crear la consulta con los campos dinámicos
+    const query = `UPDATE Usuarios SET ${fieldsToUpdate.join(", ")} WHERE id_usuarios = ?`;
+
+    try {
+        // Ejecutar la consulta en la base de datos
+        const results = await new Promise((resolve, reject) => {
+            connection.query(query, values, (err, results) => {
+                if (err) return reject(err);
+                resolve(results);
+            });
+        });
+
+        if (results.affectedRows === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        res.json({ message: 'Información actualizada exitosamente.' });
+    } catch (err) {
+        console.error('Error al actualizar la información del usuario:', err);
+        res.status(500).json({ error: 'Error en la base de datos.' });
+    }
+};
+
+
 // Exportar las funciones del controlador
 module.exports = {
     getAllUsers,
@@ -272,5 +364,7 @@ module.exports = {
     verifyToken,
     logout,
     deleteTokenById,
-    invalidateToken
+    invalidateToken,
+    verifyPassword,
+    updateUser
 };
