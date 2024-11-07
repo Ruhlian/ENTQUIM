@@ -1,0 +1,116 @@
+.modal {
+    position: fixed; /* Fija el modal en la pantalla */
+    width: 400px; /* Ancho del modal */
+    min-height: 150px; /* Altura mínima */
+    max-height: 90vh; /* Altura máxima */
+    background-color: #fff; /* Fondo blanco */
+    top: -100%; /* Comienza fuera de la vista */
+    right: 0; /* Alineación a la derecha */
+    z-index: -1; /* Para que esté detrás de otros elementos */
+    border-left: #000 1px solid; /* Borde izquierdo */
+    border-bottom: #000 1px solid; /* Borde inferior */
+    box-shadow: #00000007 10px 15px 15px; /* Sombra */
+    border-bottom-left-radius: 15px; /* Esquinas redondeadas */
+    transition: top 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Animación de deslizamiento y opacidad */
+    opacity: 0; /* Comienza invisible */
+}
+
+.modal.show {
+    z-index: 999; /* Se asegura de que el modal esté delante */
+    top: 90px; /* Desliza el modal hacia abajo para mostrarlo */
+    opacity: 1; /* Asegura que sea visible */
+    pointer-events: auto; /* Permite interacciones */
+}
+
+.modal.close-animation {
+    top: -100%; /* Desliza hacia arriba al cerrar */
+    opacity: 0; /* Hacer invisible */
+}
+
+.modal__content {
+    position: relative; /* Para posicionar elementos internos */
+    margin-top: 20px; /* Espaciado superior */
+    display: flex; /* Flexbox para alinear elementos */
+    flex-direction: column; /* Coloca los elementos en columna */
+    align-items: center; /* Centra horizontalmente */
+}
+
+.cart__header {
+    display: flex; /* Flexbox para alinear el encabezado */
+    justify-content: space-between; /* Espacio entre elementos */
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    background-color: #f0f0f0; /* Color de fondo */
+    border-bottom: 1px solid #ccc; /* Línea divisoria */
+}
+
+.cart__clear {
+    background-color: #dc3545; /* Color de fondo rojo */
+    color: white; /* Color del texto */
+    padding: 5px 10px; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+}
+
+.cart__list {
+    list-style: none; /* Sin viñetas */
+    padding: 10px; /* Espaciado interno */
+    margin: 0; /* Sin margen */
+    max-height: 400px; /* Altura máxima para desplazamiento */
+    overflow-y: auto; /* Habilita el desplazamiento vertical */
+}
+
+.cart__item {
+    display: flex; /* Flexbox para los elementos del carrito */
+    align-items: center; /* Alinea verticalmente */
+    margin-bottom: 15px; /* Espaciado inferior */
+}
+
+.cart__image {
+    width: 50px; /* Ancho de la imagen */
+    height: 50px; /* Altura de la imagen */
+    margin-right: 10px; /* Espaciado a la derecha */
+}
+
+.cart__details {
+    text-align: left; /* Alineación a la izquierda del texto */
+    flex-grow: 1; /* Permite que ocupe el espacio restante */
+}
+
+.cart-price {
+    margin-top: 5px; /* Espaciado superior */
+    font-weight: 600; /* Negrita */
+}
+
+.cart__quantity input {
+    width: 50px; /* Ancho del input de cantidad */
+    padding: 2px; /* Espaciado interno */
+}
+
+.cart__remove {
+    background-color: #dc3545; /* Color de fondo rojo */
+    color: white; /* Color del texto */
+    padding: 5px 10px; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+}
+
+.cart__subtotal {
+    margin-top: 15px; /* Espaciado superior */
+}
+
+.cart__checkout {
+    background-color: #14A2C9; /* Color de fondo azul */
+    color: white; /* Color del texto */
+    padding: 10px 20px; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Esquinas redondeadas */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    margin-top: 10px; /* Espaciado superior */
+}
+
+.cart__checkout:hover {
+    background-color: #1389aa; /* Color al pasar el cursor */
+}

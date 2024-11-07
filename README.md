@@ -10,8 +10,8 @@ mkdir server
 
 
 PARA FRONT END (client):
-npx create-react-app client
 cd client
+npm install i
 npm install react-router-dom
 npm install axios
 npm install react-toastify

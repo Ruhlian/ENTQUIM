@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './Products.css';
 import { Link } from 'react-router-dom';
 import ProductService from '../../services/ProductsService';
+import { useCart } from '../../context/CartContext'; // Importa el contexto del carrito
 
 const Products = () => {
     const [productos, setProductos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
+    const { addToCart } = useCart(); // Usa el contexto del carrito
 
     const categorias = {
         1: 'Insectos',
@@ -19,7 +21,7 @@ const Products = () => {
         const cargarProductos = async () => {
             try {
                 const productosData = await ProductService.fetchProductos();
-                console.log(productosData); // Agrega esto para ver qué datos se están obteniendo
+                console.log(productosData);
                 setProductos(productosData);
             } catch (error) {
                 console.error('Error al cargar productos:', error);
@@ -40,6 +42,10 @@ const Products = () => {
 
     const productosMostrados = categoriaSeleccionada === '' ? productos.slice(0, 5) : productosFiltrados;
     const categoriaTitulo = categoriaSeleccionada ? categorias[categoriaSeleccionada] : 'Productos';
+
+    const handleAddToCart = (producto) => {
+        addToCart(producto, 1); // Agrega el producto al carrito con cantidad 1
+    };
 
     return (
         <>
@@ -83,7 +89,7 @@ const Products = () => {
                                     </Link>
                                     <h4 className='product-container__title'>{producto.nombre}</h4>
                                     <p className='product-container__price'>${producto.precio.toFixed(3)} COP</p>
-                                    <button className='product-container__add-product'>
+                                    <button className='product-container__add-product' onClick={() => handleAddToCart(producto)}>
                                         Añadir al carrito
                                     </button>
                                 </div>

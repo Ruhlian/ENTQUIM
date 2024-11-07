@@ -12,10 +12,9 @@ class MetodoPagoController {
     static createPaymentMethod(req, res) {
         const paymentData = {
             ...req.body,
-            id_usuarios: req.userId  // Asigna el userId al método de pago
+            id_usuarios: req.userId
         };
 
-        // Validaciones adicionales si es necesario
         if (!paymentData.numero_tarjeta || paymentData.numero_tarjeta.length !== 16) {
             return res.status(400).json({ error: 'Número de tarjeta inválido.' });
         }

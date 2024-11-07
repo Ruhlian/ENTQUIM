@@ -14,8 +14,10 @@ const authMiddleware = (req, res, next) => {
             return res.status(403).json({ message: 'Token inválido' });
         }
 
-        // Extrae el id del usuario para usar en los controladores
-        req.user = decoded; // `decoded` debe contener `id` y `rol` del token JWT
+        // Extrae el id y rol del usuario del token y lo asigna a req.userId y req.userRole
+        req.userId = decoded.id;   // Asegúrate de que `id` esté presente en el payload del token
+        req.userRole = decoded.rol;  // Asegúrate de que `rol` esté presente en el payload del token
+        
         next();
     });
 };

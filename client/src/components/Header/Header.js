@@ -3,6 +3,7 @@ import './Header.css';
 import { Link, useLocation } from 'react-router-dom';
 import Images from '../../utils/Images/Images';
 import AccountModal from '../Modals/AccountModal/AccountModal'; // Descomentar esta línea para importar AccountModal
+import CartModal from '../Modals/CartModal/CartModal'
 
 const Header = () => {
     const [isCartModalOpen, setIsCartModalOpen] = useState(false);
@@ -57,6 +58,10 @@ const Header = () => {
         }
     };
 
+    const closeCartModal = () => {
+        setIsCartModalOpen(false);
+    };
+
     return (
         <header className="header">
             <div className="header__container">
@@ -86,6 +91,8 @@ const Header = () => {
 
             {/* Aquí descomentamos el AccountModal para hacerlo visible */}
             <AccountModal isOpen={isAccountModalOpen} onClose={toggleAccountModal} />
+                        {/* Modal del carrito */}
+                        <CartModal isOpen={isCartModalOpen} onClose={closeCartModal} />
         </header>
     );
 }

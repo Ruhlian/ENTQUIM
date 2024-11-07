@@ -5,7 +5,8 @@ import './AddMethodForm.css';
 import Breadcrumbs from "../../components/Breadcrumbs/Breadcrumbs";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import { Box, Typography, Link } from '@mui/material';
+import { Box, Typography, Link } from '@mui/material';  
+
 import {
   validateCardNumber,
   validateExpiryDate,
@@ -38,6 +39,7 @@ const AddMethodForm = () => {
   const [address, setAddress] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
+
 
   const handleCardNumberChange = (e) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 16);
@@ -93,7 +95,7 @@ const AddMethodForm = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.post("http://localhost:3002/api/metodos-pago", paymentData, {
+      await axios.post("http://localhost:3002/api/metodos-pago", paymentData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
