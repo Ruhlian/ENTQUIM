@@ -60,10 +60,11 @@ CREATE TABLE Usuarios (
     id_usuarios INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(55),
     apellido VARCHAR(55),
-    correo VARCHAR(200) UNIQUE NOT NULL,
-    contrasena VARCHAR(200) NOT NULL,
+    correo VARCHAR(70) UNIQUE NOT NULL,
+    contrasena VARCHAR(70) NOT NULL,
     fecha_nacimiento DATE,
     telefono VARCHAR (15),
+    direccion VARCHAR (100),
     id_rol INT,
     FOREIGN KEY (id_rol) REFERENCES Roles(id_rol) ON DELETE SET NULL
 );

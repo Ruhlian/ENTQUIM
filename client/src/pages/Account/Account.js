@@ -29,16 +29,20 @@ const AccountInfo = () => {
   const [password, setPassword] = useState("");
 
   // Sincroniza formValues con el usuario actual al cargar o actualizar el usuario
+  // En AccountInfo
   useEffect(() => {
-    setFormValues({
-      nombre: user?.nombre || "",
-      apellido: user?.apellido || "",
-      fechaNacimiento: user?.fecha_nacimiento ? user.fecha_nacimiento.split('T')[0] : "",
-      correo: user?.correo || "",
-      telefono: user?.telefono || "",
-      direccion: user?.direccion || ""
-    });
+    if (user) {
+        setFormValues({
+            nombre: user.nombre || "",
+            apellido: user.apellido || "",
+            fechaNacimiento: user.fecha_nacimiento ? user.fecha_nacimiento.split('T')[0] : "",
+            correo: user.correo || "",
+            telefono: user.telefono || "",
+            direccion: user.direccion || ""
+        });
+    }
   }, [user]);
+
 
   const handleSectionChange = (section) => {
     const hasChanges = Object.keys(formValues).some(

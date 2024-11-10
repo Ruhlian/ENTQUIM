@@ -5,7 +5,7 @@ const tokenService = require('../models/tokens'); // Asegúrate de importar el s
 
 // Obtener todos los usuarios
 const getAllUsers = (req, res) => {
-    const query = 'SELECT * FROM usuarios';
+    const query = 'SELECT * FROM Usuarios';
 
     connection.query(query, (err, results) => {
         if (err) {
@@ -51,7 +51,6 @@ const login = async (req, res) => {
         );        
         const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // Expira en 1 hora
 
-        // Insertar el token en la base de datos
         try {
             await tokenService.insertToken(user.id_usuarios, token, expiresAt);
         } catch (error) {
@@ -65,8 +64,9 @@ const login = async (req, res) => {
                 nombre: user.nombre,
                 apellido: user.apellido,
                 correo: user.correo,
-                fecha_nacimiento: user.fecha_nacimiento, // Asegúrate de que este campo exista
-                telefono: user.telefono, // Asegúrate de que este campo exista
+                fecha_nacimiento: user.fecha_nacimiento,
+                telefono: user.telefono,
+                direccion: user.direccion,
                 rol: user.id_rol,
             },
             message: 'Login exitoso',
@@ -74,7 +74,7 @@ const login = async (req, res) => {
     });
 };
 
-//verificar token del usuario para sus datos
+// Verificar token del usuario para sus datos
 const verifyToken = async (req, res) => {
     const token = req.headers['authorization']?.split(' ')[1]; // Obtiene el token del encabezado
     
@@ -117,15 +117,14 @@ const verifyToken = async (req, res) => {
     }
 };
 
-
 // Registrar un nuevo usuario
 const register = async (req, res) => {
-    const { nombre, apellido, correo, contrasena, id_rol, fecha_nacimiento, telefono } = req.body;
+    const { nombre, apellido, correo, contrasena, id_rol, fecha_nacimiento, telefono, direccion } = req.body;
     const defaultRoleId = 3; 
     const roleId = id_rol || defaultRoleId;
 
     if (!nombre || !apellido || !correo || !contrasena || !fecha_nacimiento || !telefono) {
-        return res.status(400).json({ error: 'Todos los campos son obligatorios.' });
+        return res.status(400).json({ error: 'Todos los campos obligatorios deben ser completados.' });
     }
 
     try {
@@ -145,17 +144,17 @@ const register = async (req, res) => {
 
         const { insertId } = await new Promise((resolve, reject) => {
             const query = `
-                    INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol, fecha_nacimiento, telefono) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol, fecha_nacimiento, telefono, direccion) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 `;
 
-            connection.query(query, [correo, hashedPassword, nombre, apellido, roleId, fecha_nacimiento, telefono], (err, results) => {
+            connection.query(query, [correo, hashedPassword, nombre, apellido, roleId, fecha_nacimiento, telefono, direccion || null], (err, results) => {
                 if (err) return reject(err);
                 resolve(results);
             });
         });
 
-        res.status(201).json({ id_usuarios: insertId, correo, nombre, apellido, id_rol: roleId, fecha_nacimiento, telefono });
+        res.status(201).json({ id_usuarios: insertId, correo, nombre, apellido, id_rol: roleId, fecha_nacimiento, telefono, direccion });
     } catch (err) {
         res.status(500).json({ error: 'Error en la base de datos.' });
     }
@@ -227,7 +226,7 @@ const logout = async (req, res) => {
     }
 };
 
-// elimina un token por id
+// Elimina un token por id
 const deleteTokenById = async (req, res) => {
     const { id } = req.params; // Obtener el ID del token desde los parámetros de la ruta
 
@@ -244,25 +243,23 @@ const deleteTokenById = async (req, res) => {
     }
 };
 
-// invalida el token al cerrar sesion
+// Invalida el token al cerrar sesión
 const invalidateToken = async (req, res) => {
-    const token = req.body.token; // Asegúrate de que el token venga en el cuerpo de la solicitud
+    const token = req.body.token; // Asegúrate de que el token esté presente en el cuerpo de la solicitud
 
     if (!token) {
         return res.status(400).json({ error: 'Token requerido.' });
     }
 
     try {
-        // Llama a tu modelo para eliminar el token
-        const result = await tokenService.deleteToken(token); // Implementa esta función en tu modelo
+        const result = await tokenService.invalidateToken(token); // Invalida el token en la base de datos
 
-        if (result.affectedRows === 0) {
+        if (!result) {
             return res.status(404).json({ error: 'Token no encontrado.' });
         }
 
         res.json({ message: 'Token invalidado exitosamente.' });
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ error: 'Error al invalidar el token.' });
     }
 };
@@ -295,7 +292,7 @@ const verifyPassword = async (req, res) => {
 // Actualizar información de un usuario autenticado
 const updateUser = async (req, res) => {
     const userId = req.user.id; // Obtener el ID del usuario desde el token decodificado
-    const { nombre, apellido, correo, fecha_nacimiento, telefono } = req.body;
+    const { nombre, apellido, correo, fecha_nacimiento, telefono, direccion } = req.body;
 
     // Construir los campos para actualizar dinámicamente
     let fieldsToUpdate = [];
@@ -321,7 +318,11 @@ const updateUser = async (req, res) => {
         fieldsToUpdate.push("telefono = ?");
         values.push(telefono);
     }
-
+    if (direccion) {
+        fieldsToUpdate.push("direccion = ?");
+        values.push(direccion)
+    }
+    
     // Verificar si hay campos para actualizar
     if (fieldsToUpdate.length === 0) {
         return res.status(400).json({ error: 'No se enviaron campos para actualizar.' });
@@ -359,12 +360,13 @@ module.exports = {
     getAllUsers,
     login,
     register,
+    login,
     deleteUserById,
     changeUserRole,
-    verifyToken,
     logout,
-    deleteTokenById,
     invalidateToken,
-    verifyPassword,
-    updateUser
+    verifyToken,
+    deleteTokenById,
+    updateUser, 
+    verifyPassword
 };

@@ -35,6 +35,14 @@ export const AuthProvider = ({ children }) => {
         }
     }, []);
 
+    const handleInvalidToken = () => {
+        console.log('Token inválido o expirado');
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        showToast('Sesión expirada. Por favor, inicia sesión nuevamente.', 'error');
+        navigate('/Iniciar-Sesion');
+    };
+
     useEffect(() => {
         const checkUserSession = async () => {
             const storedUser = localStorage.getItem('user');
@@ -55,14 +63,6 @@ export const AuthProvider = ({ children }) => {
                 console.log('No se encontró usuario o token en localStorage');
                 setLoading(false);
             }
-        };
-
-        const handleInvalidToken = () => {
-            console.log('Token inválido o expirado');
-            localStorage.removeItem('user');
-            localStorage.removeItem('token');
-            showToast('Sesión expirada. Por favor, inicia sesión nuevamente.', 'error');
-            navigate('/Iniciar-Sesion');
         };
 
         checkUserSession();
@@ -135,8 +135,8 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
     };
 
-    const updateUserInfo = async (updatedData) => {
-        if (user && user.id_usuarios) {
+    const updateUser = async (updatedData) => {
+        if (user?.id_usuarios) {
             console.log('Actualizando usuario con datos:', { id_usuarios: user.id_usuarios, ...updatedData });
             try {
                 const updatedUser = await AuthService.updateUser(user.id_usuarios, updatedData);
@@ -155,7 +155,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, handleLogin, handleLogout, handleRegister, updateUserInfo, loading }}>
+        <AuthContext.Provider value={{ user, handleLogin, handleLogout, handleRegister, updateUser, loading }}>
             {children}
         </AuthContext.Provider>
     );

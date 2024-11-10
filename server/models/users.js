@@ -23,15 +23,15 @@ class Usuario {
 
     // Crear nuevo usuario
     static async createUser(userData) {
-        const { correo, contrasena, nombre, apellido, rol, fecha_nacimiento, telefono } = userData;
+        const { correo, contrasena, nombre, apellido, rol, fecha_nacimiento, telefono, direccion } = userData;
         const hashedPassword = await bcrypt.hash(contrasena, 10);
         const query = `
-            INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol, fecha_nacimiento, telefono)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO Usuarios (correo, contrasena, nombre, apellido, id_rol, fecha_nacimiento, telefono, direccion)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
         try {
             const results = await new Promise((resolve, reject) => {
-                db.query(query, [correo, hashedPassword, nombre, apellido, rol, fecha_nacimiento, telefono], (err, results) => {
+                db.query(query, [correo, hashedPassword, nombre, apellido, rol, fecha_nacimiento, telefono, direccion], (err, results) => {
                     if (err) return reject(err);
                     resolve({ id_usuarios: results.insertId, ...userData });
                 });
