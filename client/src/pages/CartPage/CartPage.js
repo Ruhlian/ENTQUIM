@@ -120,8 +120,10 @@ const Cart = () => {
 
   return (
     <div>
+      
+      <h2 className= "cart-title"> Tu Carrito</h2>
+
       <div className="cart-container">
-        <h2>Tu Carrito</h2>
         {isLoading ? (
           <p>Cargando productos...</p>
         ) : cartItems.length === 0 ? (
