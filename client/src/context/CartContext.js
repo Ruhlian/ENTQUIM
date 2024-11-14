@@ -60,7 +60,7 @@ export const CartProvider = ({ children }) => {
         setCartItems((prevItems) =>
             quantity > 0
                 ? prevItems.map(item => item.id_producto === id_producto ? { ...item, quantity } : item)
-                : prevItems.filter(item => item.id_producto !== id_producto)
+                : prevItems.filter(item => item.id_producto !== id_producto) // Para eliminar el producto si quantity es 0 o negativo
         );
     };
 

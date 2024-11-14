@@ -74,20 +74,40 @@
   margin-left: 15px;
 }
 
-.cart-item-quantity input {
-  width: 40px;
-  text-align: center;
-  border: 1px solid #2d90be;
-  border-radius: 5px;
-  margin: 0 5px;
+/* Contenedor de los botones de cantidad */
+.quantity-container {
+  display: flex;
+  align-items: center; /* Alinea verticalmente los elementos */
+  justify-content: center; /* Centra los elementos */
+  border: 1px solid #ccc; /* Borde alrededor */
+  border-radius: 5px; /* Bordes redondeados */
+  padding: 5px 15px; /* Espaciado alrededor de los botones */
+  background-color: #fff; /* Fondo claro */
+  gap: 15px; /* Espacio entre los botones y el número */
+  width: 80px; /* Ancho fijo para el cuadro */
+  height: 30px; /* Alto fijo para el cuadro */
 }
 
-.cart-item-quantity button {
-  background-color: #2d90be;
-  color: white;
+/* Estilo para los botones de cantidad */
+.quantity-container button {
+  background-color: transparent;
+  color: black;
   border: none;
   border-radius: 5px;
-  padding: 5px 8px;
+  padding: 2px 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.quantity-container button:hover {
+  background-color: #f0f0f0; /* Color al pasar el mouse */
+}
+
+/* Estilo del número de cantidad */
+.quantity-container span {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
 }
 
 .remove-btn {

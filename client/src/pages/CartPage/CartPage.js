@@ -120,8 +120,7 @@ const Cart = () => {
 
   return (
     <div>
-      
-      <h2 className= "cart-title"> Tu Carrito</h2>
+      <h2 className="cart-title"> Tu Carrito</h2>
 
       <div className="cart-container">
         {isLoading ? (
@@ -142,38 +141,33 @@ const Cart = () => {
                     <div>
                       <h3>{item.nombre}</h3>
                       <p className="item-price">${item.precio}</p>
-                      <div className="cart-item-quantity">
+                      <div className="quantity-container">
                         <button
                           onClick={() =>
                             item.quantity > 1
-                              ? updateCartItemQuantity(item.id, item.quantity - 1)
+                              ? updateCartItemQuantity(item.id_producto, item.quantity - 1)
                               : null
                           }
                         >
                           -
                         </button>
-                        <input
-                          type="number"
-                          min="1"
-                          value={item.quantity}
-                          readOnly
-                        />
+                        <span>{item.quantity}</span>
                         <button
-                          onClick={() => updateCartItemQuantity(item.id, item.quantity + 1)}
+                          onClick={() => updateCartItemQuantity(item.id_producto, item.quantity + 1)}
                         >
                           +
-                        </button>
-                        <button
-                          className="remove-btn"
-                          onClick={() => removeFromCart(item.id)}
-                        >
-                          Eliminar
                         </button>
                       </div>
                     </div>
                   </div>
                   <div className="cart-item-total">
                     <p>Total: ${item.precio * item.quantity}</p>
+                    <button
+                      className="remove-btn"
+                      onClick={() => removeFromCart(item.id)}
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 </div>
               ))}
@@ -264,7 +258,7 @@ const Cart = () => {
                     </form>
                   </div>
                 )}
-                
+
                 {selectedPaymentMethod === "cashOnDelivery" && (
                   <div className="delivery-form">
                     <h4>Detalles de entrega</h4>
