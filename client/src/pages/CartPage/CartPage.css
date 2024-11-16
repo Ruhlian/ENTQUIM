@@ -1,12 +1,12 @@
 /* Título fuera del contenedor del carrito */
 .cart-title {
-  text-align: center; /* Centrar el título */
-  font-size: 24px; /* Tamaño de fuente adecuado */
-  margin-bottom: 15px; /* Espacio debajo del título */
-  font-weight: bold; /* Hacer el título más destacado */
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 15px;
+  font-weight: bold;
 }
 
-/* Contenedor principal del carrito con flexbox */
+/* Contenedor principal del carrito */
 .cart-container {
   width: 90%;
   max-width: 950px;
@@ -15,23 +15,21 @@
   border: 2px solid #eaeef0;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  display: flex; /* Usamos Flexbox para las columnas */
-  flex-wrap: wrap; /* Asegura que se ajusten en pantallas más pequeñas */
-  gap: 20px; /* Espacio entre las columnas */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 /* Estilo de cada columna (resumen y productos) */
 .cart-items, .cart-summary {
-  flex: 0; /* Esto hace que ambas columnas ocupen el mismo espacio */
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* Resumen del pedido siempre debe ocupar espacio al lado */
 .cart-summary {
-  flex-basis: 30%; /* Para que ocupe aproximadamente un 30% del ancho */
-  min-width: 200px; /* Asegura que no se haga demasiado estrecho */
+  flex-basis: 30%;
+  min-width: 200px;
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -39,15 +37,8 @@
 }
 
 .cart-items {
-  flex-grow: 1; /* La sección de los productos ocupa el espacio restante */
+  flex-grow: 1;
 }
-
-/* Aseguramos que el contenido dentro de las columnas se estire para igualar las alturas */
-.cart-items,
-.cart-summary {
-  height: 100%; /* Asegura que ambas columnas se estiren a la misma altura */
-}
-
 
 /* Estilos de las filas de los productos */
 .cart-item {
@@ -56,7 +47,7 @@
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  margin-bottom: 10px; /* Espacio entre los items */
+  margin-bottom: 10px;
 }
 
 .cart-item-info {
@@ -68,24 +59,18 @@
   font-weight: bold;
 }
 
-.cart-item-quantity {
-  display: flex;
-  align-items: center;
-  margin-left: 15px;
-}
-
 /* Contenedor de los botones de cantidad */
 .quantity-container {
   display: flex;
-  align-items: center; /* Alinea verticalmente los elementos */
-  justify-content: center; /* Centra los elementos */
-  border: 1px solid #ccc; /* Borde alrededor */
-  border-radius: 5px; /* Bordes redondeados */
-  padding: 5px 15px; /* Espaciado alrededor de los botones */
-  background-color: #fff; /* Fondo claro */
-  gap: 15px; /* Espacio entre los botones y el número */
-  width: 80px; /* Ancho fijo para el cuadro */
-  height: 30px; /* Alto fijo para el cuadro */
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px 15px;
+  background-color: #fff;
+  gap: 15px;
+  width: 80px;
+  height: 30px;
 }
 
 /* Estilo para los botones de cantidad */
@@ -96,18 +81,6 @@
   border-radius: 5px;
   padding: 2px 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.quantity-container button:hover {
-  background-color: #f0f0f0; /* Color al pasar el mouse */
-}
-
-/* Estilo del número de cantidad */
-.quantity-container span {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
 }
 
 .remove-btn {
@@ -129,28 +102,12 @@
 .clear-btn {
   display: inline-block;
   width: 48%;
-  padding: 10px;
+  padding: 12px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
   margin: 10px 1%;
   font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-/* Botones de proceder al pago y vaciar carrito */
-.checkout-btn,
-.clear-btn {
-  display: inline-block;
-  width: 48%; /* Ambos botones ocupan el mismo ancho */
-  padding: 12px; /* Igualar el padding para consistencia en tamaño */
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  margin: 10px 1%; /* Espacio entre los botones */
-  font-size: 16px;
-  transition: background-color 0.3s;
-  box-sizing: border-box; /* Asegura que el padding no afecte el tamaño final */
 }
 
 .checkout-btn {
@@ -192,88 +149,144 @@
 }
 
 .payment-options {
-  margin-top: 20px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 30px;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.payment-options h4 {
-  margin-bottom: 10px;
-  font-size: 18px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Título */
+.payment-options h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #4f4f4f;
+  text-align: center;
+}
+
+/* Estilos de los botones de pago */
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fc;
   color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .payment-options label {
   display: block;
-  margin-bottom: 10px;
   font-size: 16px;
+  margin-bottom: 10px;
   color: #555;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.payment-options label:hover {
+  color: #007bff;
 }
 
 .payment-options input[type="radio"] {
   margin-right: 10px;
-  transform: scale(1.2);
+  accent-color: #007bff;
+}
+
+.payment-options .form-group {
+  margin-bottom: 20px;
+}
+
+/* Formulario */
+.payment-options form {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-options input[type="text"] {
+  font-size: 16px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.payment-options input[type="text"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Botón de envío */
+.payment-options button {
+  background-color: #007bff;
+  color: white;
+  font-size: 18px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.payment-options button:hover {
+  background-color: #0056b3;
+}
+
+/* Mensaje de alerta */
+.alert {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 8px;
+  border: 1px solid #f5c6cb;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .payment-options {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .payment-options h3 {
+    font-size: 20px;
+  }
+
+  .payment-options label {
+    font-size: 14px;
+  }
+
+  .payment-options input[type="text"] {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .payment-options button {
+    font-size: 16px;
+    padding: 10px;
+  }
 }
 
 /* Estilos del formulario de tarjeta de crédito */
-.credit-card-form {
-  margin-top: 20px;
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-.credit-card-form h4 {
-  margin-bottom: 15px;
-  color: #333;
-  font-size: 18px;
-}
-
-.credit-card-form form div {
-  margin-bottom: 15px;
-}
-
-.credit-card-form label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #555;
-}
-
-.credit-card-form input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  box-sizing: border-box;
-}
-
-.credit-card-form input::placeholder {
-  color: #aaa;
-}
-
-.credit-card-form button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 10px;
-}
-
-.credit-card-form button:hover {
-  background-color: #45a049;
-}
-
-/* Estilos del formulario de pago contraentrega */
+.credit-card-form,
 .delivery-form {
   margin-top: 20px;
   border: 1px solid #ccc;
@@ -282,16 +295,19 @@
   background-color: #f9f9f9;
 }
 
+.credit-card-form h4,
 .delivery-form h4 {
   margin-bottom: 15px;
   color: #333;
   font-size: 18px;
 }
 
+.credit-card-form div,
 .delivery-form div {
   margin-bottom: 15px;
 }
 
+.credit-card-form label,
 .delivery-form label {
   display: block;
   margin-bottom: 5px;
@@ -299,19 +315,21 @@
   color: #555;
 }
 
+.credit-card-form input,
 .delivery-form input {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
-  box-sizing: border-box;
 }
 
+.credit-card-form input::placeholder,
 .delivery-form input::placeholder {
   color: #aaa;
 }
 
+.credit-card-form button,
 .delivery-form button {
   background-color: #4caf50;
   color: white;
@@ -325,6 +343,7 @@
   margin-top: 10px;
 }
 
+.credit-card-form button:hover,
 .delivery-form button:hover {
   background-color: #45a049;
 }
@@ -346,7 +365,7 @@
 /* Media Queries para mejorar la responsividad */
 @media (max-width: 768px) {
   .cart-container {
-    flex-direction: column; /* En pantallas pequeñas, cambiamos a una sola columna */
+    flex-direction: column;
   }
 
   .cart-summary {
@@ -364,13 +383,13 @@
 
   .alert {
     position: fixed;
-    top: 20%;
     right: 20px;
-    background-color: #f44336;
+    top: 80px;
+    padding: 10px 20px;
+    background-color: rgba(255, 0, 0, 0.8);
     color: white;
-    padding: 15px;
     border-radius: 5px;
+    font-size: 16px;
     z-index: 1000;
-    transition: opacity 0.3s ease;
   }
 }

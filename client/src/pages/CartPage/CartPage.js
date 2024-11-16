@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./CartPage.css";
 
 const Cart = () => {
   const { cartItems, updateCartItemQuantity, removeFromCart, clearCart } = useCart();
-  const [productos, setProductos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [creditCardDetails, setCreditCardDetails] = useState({
     cardNumber: "",
     cardName: "",
     expirationDate: "",
-    cvv: ""
+    cvv: "",
   });
   const [deliveryDetails, setDeliveryDetails] = useState({
     deliveryName: "",
-    deliveryAddress: ""
+    deliveryAddress: "",
   });
   const [errors, setErrors] = useState({
     cardNumber: "",
@@ -24,23 +26,10 @@ const Cart = () => {
     expirationDate: "",
     cvv: "",
     deliveryName: "",
-    deliveryAddress: ""
+    deliveryAddress: "",
   });
   const [alertMessage, setAlertMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-
-  useEffect(() => {
-    fetch('http://localhost:3001/productos')
-      .then((response) => response.json())
-      .then((data) => {
-        setProductos(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching productos:', error);
-        setIsLoading(false);
-      });
-  }, []);
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.precio * item.quantity,
@@ -48,6 +37,13 @@ const Cart = () => {
   );
 
   const handleCheckout = () => {
+    if (!user) {
+      toast.warn("Debe registrarse para continuar", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      return;
+    }
     setShowPaymentOptions(true);
   };
 
@@ -59,7 +55,8 @@ const Cart = () => {
     let errorMessage = "";
     if (name === "cardNumber") {
       if (!/^\d{16}$/.test(value)) {
-        errorMessage = "El número de la tarjeta solo puede contener números y debe tener 16 dígitos.";
+        errorMessage =
+          "El número de la tarjeta solo puede contener números y debe tener 16 dígitos.";
       }
     } else if (name === "cardName") {
       if (!/^[a-zA-Z\s]+$/.test(value)) {
@@ -103,29 +100,51 @@ const Cart = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    let valid = true;
+
     if (selectedPaymentMethod === "creditCard") {
-      Object.keys(creditCardDetails).forEach((field) => validateField(field, creditCardDetails[field]));
-      if (Object.values(errors).every((error) => error === "")) {
-        console.log("Datos de la tarjeta: ", creditCardDetails);
-        alert("Pago realizado con éxito.");
-      }
+      Object.keys(creditCardDetails).forEach((field) =>
+        validateField(field, creditCardDetails[field])
+      );
     } else if (selectedPaymentMethod === "cashOnDelivery") {
-      Object.keys(deliveryDetails).forEach((field) => validateField(field, deliveryDetails[field]));
-      if (Object.values(errors).every((error) => error === "")) {
+      Object.keys(deliveryDetails).forEach((field) =>
+        validateField(field, deliveryDetails[field])
+      );
+    }
+
+    // Verifica si hay errores
+    if (!Object.values(errors).every((error) => error === "")) {
+      toast.error("Por favor, corrige los errores antes de continuar.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      valid = false;
+    }
+
+    if (valid) {
+      if (selectedPaymentMethod === "creditCard") {
+        console.log("Datos de la tarjeta: ", creditCardDetails);
+        toast.success("Pago realizado con éxito.", {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      } else if (selectedPaymentMethod === "cashOnDelivery") {
         console.log("Detalles de entrega: ", deliveryDetails);
-        alert("Pedido realizado con éxito para entrega.");
+        toast.success("Pedido realizado con éxito para entrega.", {
+          position: "top-center",
+          autoClose: 3000,
+        });
       }
     }
   };
 
   return (
     <div>
-      <h2 className="cart-title"> Tu Carrito</h2>
+      <h2 className="cart-title">Tu Carrito</h2>
 
       <div className="cart-container">
-        {isLoading ? (
-          <p>Cargando productos...</p>
-        ) : cartItems.length === 0 ? (
+        {cartItems.length === 0 ? (
           <div className="empty-cart">
             <p>Tu carrito está vacío.</p>
             <a href="/productos" className="shop-btn">
@@ -136,11 +155,13 @@ const Cart = () => {
           <>
             <div className="cart-items">
               {cartItems.map((item) => (
-                <div key={item.id} className="cart-item">
+                <div key={item.id_producto} className="cart-item">
                   <div className="cart-item-info">
                     <div>
                       <h3>{item.nombre}</h3>
-                      <p className="item-price">${item.precio}</p>
+                      <p className="item-price">
+                        COP {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                      </p>
                       <div className="quantity-container">
                         <button
                           onClick={() =>
@@ -161,10 +182,10 @@ const Cart = () => {
                     </div>
                   </div>
                   <div className="cart-item-total">
-                    <p>Total: ${item.precio * item.quantity}</p>
+                    <p>Total: COP {(item.precio * item.quantity).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</p>
                     <button
                       className="remove-btn"
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() => removeFromCart(item.id_producto)}
                     >
                       Eliminar
                     </button>
@@ -174,126 +195,120 @@ const Cart = () => {
             </div>
             <div className="cart-summary">
               <h3>Resumen del pedido</h3>
-              <p>Subtotal: ${subtotal.toFixed(2)}</p>
+              <p>Subtotal: COP {subtotal.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</p>
               <p>Envío: Gratis</p>
-              <h3>Total: ${subtotal.toFixed(2)}</h3>
+              <h3>Total: COP {subtotal.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h3>
               <button className="checkout-btn" onClick={handleCheckout}>
                 Proceder a pagar
               </button>
-              <button className="clear-btn" onClick={clearCart}>
-                Vaciar Carrito
-              </button>
             </div>
+
             {showPaymentOptions && (
               <div className="payment-options">
-                <h4>Elegir método de pago</h4>
-                <label>
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="creditCard"
-                    onChange={handlePaymentMethodChange}
-                  />
-                  Tarjeta de crédito
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="cashOnDelivery"
-                    onChange={handlePaymentMethodChange}
-                  />
-                  Contraentrega
-                </label>
+                <div>
+                  <label>
+                    <input
+                      type="radio"
+                      value="creditCard"
+                      checked={selectedPaymentMethod === "creditCard"}
+                      onChange={handlePaymentMethodChange}
+                    />
+                    Tarjeta de crédito
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      value="cashOnDelivery"
+                      checked={selectedPaymentMethod === "cashOnDelivery"}
+                      onChange={handlePaymentMethodChange}
+                    />
+                    Contra entrega
+                  </label>
+                </div>
 
                 {selectedPaymentMethod === "creditCard" && (
-                  <div className="credit-card-form">
-                    <h4>Detalles de la tarjeta de crédito</h4>
-                    <form onSubmit={handleSubmit}>
-                      <div>
-                        <label>Número de tarjeta</label>
-                        <input
-                          type="text"
-                          name="cardNumber"
-                          placeholder="0000 0000 0000 0000"
-                          value={creditCardDetails.cardNumber}
-                          onChange={handleInputChange}
-                        />
-                        {errors.cardNumber && <p className="error-message">{errors.cardNumber}</p>}
-                      </div>
-                      <div>
-                        <label>Nombre en la tarjeta</label>
-                        <input
-                          type="text"
-                          name="cardName"
-                          placeholder="Nombre del titular"
-                          value={creditCardDetails.cardName}
-                          onChange={handleInputChange}
-                        />
-                        {errors.cardName && <p className="error-message">{errors.cardName}</p>}
-                      </div>
-                      <div>
-                        <label>Fecha de vencimiento</label>
-                        <input
-                          type="text"
-                          name="expirationDate"
-                          placeholder="MM/AA"
-                          value={creditCardDetails.expirationDate}
-                          onChange={handleInputChange}
-                        />
-                        {errors.expirationDate && <p className="error-message">{errors.expirationDate}</p>}
-                      </div>
-                      <div>
-                        <label>CVV</label>
-                        <input
-                          type="text"
-                          name="cvv"
-                          placeholder="CVV"
-                          value={creditCardDetails.cvv}
-                          onChange={handleInputChange}
-                        />
-                        {errors.cvv && <p className="error-message">{errors.cvv}</p>}
-                      </div>
-                      <button type="submit">Pagar</button>
-                    </form>
-                  </div>
+                  <form onSubmit={handleSubmit}>
+                    <div>
+                      <label htmlFor="cardNumber">Número de tarjeta</label>
+                      <input
+                        type="text"
+                        id="cardNumber"
+                        name="cardNumber"
+                        placeholder="XXXX XXXX XXXX XXXX"
+                        value={creditCardDetails.cardNumber}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="cardName">Nombre en la tarjeta</label>
+                      <input
+                        type="text"
+                        id="cardName"
+                        name="cardName"
+                        placeholder="Nombre del titular"
+                        value={creditCardDetails.cardName}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="expirationDate">Fecha de vencimiento</label>
+                      <input
+                        type="text"
+                        id="expirationDate"
+                        name="expirationDate"
+                        placeholder="MM/AA"
+                        value={creditCardDetails.expirationDate}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="cvv">CVV</label>
+                      <input
+                        type="text"
+                        id="cvv"
+                        name="cvv"
+                        placeholder="XXX"
+                        value={creditCardDetails.cvv}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <button type="submit">Realizar pago</button>
+                  </form>
                 )}
 
                 {selectedPaymentMethod === "cashOnDelivery" && (
-                  <div className="delivery-form">
-                    <h4>Detalles de entrega</h4>
-                    <form onSubmit={handleSubmit}>
-                      <div>
-                        <label>Nombre</label>
-                        <input
-                          type="text"
-                          name="deliveryName"
-                          placeholder="Tu nombre"
-                          value={deliveryDetails.deliveryName}
-                          onChange={handleInputChange}
-                        />
-                        {errors.deliveryName && <p className="error-message">{errors.deliveryName}</p>}
-                      </div>
-                      <div>
-                        <label>Dirección</label>
-                        <input
-                          type="text"
-                          name="deliveryAddress"
-                          placeholder="Tu dirección"
-                          value={deliveryDetails.deliveryAddress}
-                          onChange={handleInputChange}
-                        />
-                        {errors.deliveryAddress && <p className="error-message">{errors.deliveryAddress}</p>}
-                      </div>
-                      <button type="submit">Pagar</button>
-                    </form>
-                  </div>
+                  <form onSubmit={handleSubmit}>
+                    <div>
+                      <label htmlFor="deliveryName">Nombre de entrega</label>
+                      <input
+                        type="text"
+                        id="deliveryName"
+                        name="deliveryName"
+                        placeholder="Nombre completo"
+                        value={deliveryDetails.deliveryName}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="deliveryAddress">Dirección de entrega</label>
+                      <input
+                        type="text"
+                        id="deliveryAddress"
+                        name="deliveryAddress"
+                        placeholder="Dirección completa"
+                        value={deliveryDetails.deliveryAddress}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <button type="submit">Confirmar entrega</button>
+                  </form>
                 )}
               </div>
             )}
           </>
         )}
       </div>
+
       {showAlert && <div className="alert">{alertMessage}</div>}
     </div>
   );

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import ScrollToTop from './hooks/ScrollToTop/ScrollToTop';
 import { ToastContainer } from 'react-toastify'; // Importa ToastContainer
+import 'react-toastify/dist/ReactToastify.css';  // Asegúrate de importar los estilos de toastify
 
 // Importación de páginas.
 import Layout from './components/Layout/Layout';
@@ -26,14 +27,16 @@ function App() {
             <AuthProvider>
                 <CartProvider>
                     <ScrollToTop />
-                    <ToastContainer /> {/* Agrega ToastContainer aquí */}
+                    {/* Aquí está el ToastContainer que manejará las notificaciones */}
+                    <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} closeOnClick draggable pauseOnHover />
+
                     <Routes>
                         <Route path='/' exact element={
                             <Layout>
                                 <Home />
                             </Layout>
                         } />
-                        
+
                         <Route path='/Nosotros' exact element={
                             <Layout>
                                 <AboutUs />
