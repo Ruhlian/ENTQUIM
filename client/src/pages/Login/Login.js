@@ -24,6 +24,7 @@ const Login = () => {
     const [lastNameError, setLastNameError] = useState('');
     const [phoneError, setPhoneError] = useState('');
     const [birthDateError, setBirthDateError] = useState('');
+    const [isRegistered, setIsRegistered] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -79,29 +80,32 @@ const Login = () => {
     };
 
     const handleBirthDateChange = (e) => {
-        const currentDate = new Date();
         const selectedDate = new Date(e.target.value);
-        const yearDifference = currentDate.getFullYear() - selectedDate.getFullYear();
-
+        const currentDate = new Date();
+    
         setBirthDate(e.target.value);
-
-        if (yearDifference < 0 || yearDifference > 120) {
+    
+        if (selectedDate > currentDate) {
+            setBirthDateError('La fecha no puede ser en el futuro.');
+        } else if (currentDate.getFullYear() - selectedDate.getFullYear() > 120) {
             setBirthDateError('Por favor, selecciona un año coherente.');
         } else {
             setBirthDateError('');
         }
     };
+    
 
     const handlePhoneChange = (e) => {
-        const value = e.target.value.replace(/[^\d\s]/g, '').slice(0, 10); // Solo números y espacios, máximo 10 caracteres
+        const value = e.target.value.replace(/\D/g, '').slice(0, 10); // Solo números, máximo 10 caracteres
         setPhone(value);
-
-        if (!/^(\d{3}\s){2}\d{2}\s\d{2}$/.test(value)) {
-            setPhoneError('Formato esperado: "XXX XXX XX XX".');
+    
+        if (value.length < 10) {
+            setPhoneError('El número debe tener 10 dígitos.');
         } else {
             setPhoneError('');
         }
     };
+    
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
@@ -122,29 +126,36 @@ const Login = () => {
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage('');
-
-        if (nameError || lastNameError || correoError || contrasenaError) return;
-
-        try {
-            setIsAdditionalInfoView(true);
-        } catch (error) {
-            setErrorMessage('Error al registrar el usuario. Inténtalo de nuevo.');
+    
+        if (nameError || lastNameError || correoError || contrasenaError) {
+            setErrorMessage('Por favor corrige los errores antes de continuar.');
+            return;
         }
+    
+        // Pasa a la vista adicional solo si no hay errores
+        setIsAdditionalInfoView(true);
     };
-
+    
     const handleAdditionalInfoSubmit = async (e) => {
         e.preventDefault();
         setErrorMessage('');
-
-        if (birthDateError || phoneError) return;
-
+    
+        if (birthDateError || phoneError) {
+            setErrorMessage('Por favor corrige los errores antes de registrar.');
+            return;
+        }
+    
         try {
             await handleRegister(name, lastName, correo, contrasena, birthDate, phone);
+            // Cambiar a vista de login y mantener el correo
+            setIsRegistered(true);
+            setIsRegisterView(false);
+            setIsAdditionalInfoView(false);
         } catch (error) {
             setErrorMessage('Error al registrar el usuario. Inténtalo de nuevo.');
         }
     };
-
+    
     const handleContrasenaVisibility = () => {
         setContrasenaVisible(prev => !prev);
     };

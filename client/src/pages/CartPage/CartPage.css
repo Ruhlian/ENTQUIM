@@ -178,7 +178,7 @@
 
 /* Estilos de los botones de pago */
 
-body {
+/* body {
   font-family: 'Arial', sans-serif;
   background-color: #f4f7fc;
   color: #333;
@@ -188,7 +188,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-}
+} */
 
 .payment-options label {
   display: block;
