@@ -69,9 +69,16 @@
 .card-actions button {
   background: none;
   border: none;
-  color: #000;
+  color: #a50808;
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
+}
+
+.card-actions {
+  padding-bottom: 15px;
+  margin-left: auto; /* Empuja el botón a la derecha dentro del contenedor */
+  display: flex; /* Asegura que se alinee correctamente si hay más de un elemento */
 }
 
 .add-method {
@@ -143,6 +150,7 @@
   padding: 5px 0;
   z-index: 1000;
 }
+
 
 .actions-menu button {
   background: none;

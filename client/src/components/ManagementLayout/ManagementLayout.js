@@ -21,8 +21,14 @@ const ManagementLayout = ({ children }) => {
       name: 'Pagos', 
       path: '/gestion-cuenta/pagos', 
       selectedIcon: Images.icons.paymentsselected, 
-      unselectedIcon: Images.icons.paymentsunselected 
+      unselectedIcon: Images.icons.paymentsunselected
     },
+    {
+      name: 'Órdenes',
+      path: '/gestion-cuenta/mis-ordenes',
+      selectedIcon: Images.icons.reportselected,
+      unselectedIcon: Images.icons.reportunselected
+    }
   ], []);
 
   // Función para obtener la sección activa basada en la ruta

@@ -119,25 +119,22 @@ main::before {
     color: #46a2fd;
 }
 
-.contenedor__login-register form input {
-    width: 100%;
-    margin-top: 20px;
-    padding: 10px;
+.login-button {
+    margin-top: 20px; /* Reduce el espacio superior para mayor cercanía */
+    padding: 10px 15px; /* Ajusta el padding para un botón más compacto */
+    width: 100%; /* Asegúrate de que los botones ocupen todo el ancho disponible */
     border: none;
-    background: #f2f2f2;
-    font-size: 16px;
-    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s, transform 0.2s; /* Transición suave para el color de fondo y transformación */
+    background-color: #14A2C9;
+    color: #fff;
 }
 
-.contenedor__login-register form button {
-    padding: 10px 40px;
-    margin-top: 40px;
-    border: none;
-    font-size: 14px;
-    background: #46a2fd;
-    color: white;
-    cursor: pointer;
-    outline: none;
+.login-button:hover {
+    background-color: #0a7f99; /* Color de hover más oscuro para mejor contraste */
+    transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
 }
 
 .visibility-icon {

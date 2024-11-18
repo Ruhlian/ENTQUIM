@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import Images from '../../utils/Images/Images';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { TextField, IconButton } from '@mui/material';
 import { validateCorreo, validateName, validateContrasena } from '../../utils/helpers';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -21,6 +22,8 @@ const Login = () => {
     const [contrasenaError, setContrasenaError] = useState('');
     const [nameError, setNameError] = useState('');
     const [lastNameError, setLastNameError] = useState('');
+    const [phoneError, setPhoneError] = useState('');
+    const [birthDateError, setBirthDateError] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -35,44 +38,68 @@ const Login = () => {
         setErrorMessage('');
     };
 
-    // Validación en tiempo real de cada campo
     const handleCorreoChange = (e) => {
-        const value = e.target.value;
+        const value = e.target.value.slice(0, 35); // Limita a 35 caracteres
         setCorreo(value);
         if (!validateCorreo(value)) {
-            setCorreoError('Correo inválido (mínimo 15 caracteres, máximo 35).');
+            setCorreoError('Debe tener el formato nombre@dominio.com.');
         } else {
             setCorreoError('');
         }
     };
 
     const handleContrasenaChange = (e) => {
-        const value = e.target.value;
+        const value = e.target.value.slice(0, 35); // Limita a 35 caracteres
         setContrasena(value);
         if (!validateContrasena(value)) {
-            setContrasenaError('Contraseña inválida (entre 10 y 35 caracteres, con letras, números y un símbolo).');
+            setContrasenaError('Debe tener 8-35 caracteres, incluir letras, números y un símbolo.');
         } else {
             setContrasenaError('');
         }
     };
 
     const handleNameChange = (e) => {
-        const value = e.target.value;
+        const value = e.target.value.replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]/g, '').slice(0, 15); // Solo letras y espacios, máximo 15 caracteres
         setName(value);
         if (!validateName(value)) {
-            setNameError('Nombre inválido (solo letras, máximo 15 caracteres).');
+            setNameError('Solo se permiten letras y espacios.');
         } else {
             setNameError('');
         }
     };
 
     const handleLastNameChange = (e) => {
-        const value = e.target.value;
+        const value = e.target.value.replace(/[^a-zA-ZñÑáéíóúÁÉÍÓÚ\s]/g, '').slice(0, 15); // Solo letras y espacios, máximo 15 caracteres
         setLastName(value);
         if (!validateName(value)) {
-            setLastNameError('Apellido inválido (solo letras, máximo 15 caracteres).');
+            setLastNameError('Solo se permiten letras y espacios.');
         } else {
             setLastNameError('');
+        }
+    };
+
+    const handleBirthDateChange = (e) => {
+        const currentDate = new Date();
+        const selectedDate = new Date(e.target.value);
+        const yearDifference = currentDate.getFullYear() - selectedDate.getFullYear();
+
+        setBirthDate(e.target.value);
+
+        if (yearDifference < 0 || yearDifference > 120) {
+            setBirthDateError('Por favor, selecciona un año coherente.');
+        } else {
+            setBirthDateError('');
+        }
+    };
+
+    const handlePhoneChange = (e) => {
+        const value = e.target.value.replace(/[^\d\s]/g, '').slice(0, 10); // Solo números y espacios, máximo 10 caracteres
+        setPhone(value);
+
+        if (!/^(\d{3}\s){2}\d{2}\s\d{2}$/.test(value)) {
+            setPhoneError('Formato esperado: "XXX XXX XX XX".');
+        } else {
+            setPhoneError('');
         }
     };
 
@@ -80,13 +107,15 @@ const Login = () => {
         e.preventDefault();
         setErrorMessage('');
 
-        if (correoError || contrasenaError) return;
+        if (!correo || !contrasena) {
+            setErrorMessage('La contraseña o el correo son inválidos.');
+            return;
+        }
 
         try {
             await handleLogin(correo, contrasena);
         } catch (error) {
-            console.error('Login failed:', error);
-            setErrorMessage(error.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+            setErrorMessage('La contraseña o el correo son inválidos.');
         }
     };
 
@@ -99,7 +128,6 @@ const Login = () => {
         try {
             setIsAdditionalInfoView(true);
         } catch (error) {
-            console.error('Registro fallido:', error);
             setErrorMessage('Error al registrar el usuario. Inténtalo de nuevo.');
         }
     };
@@ -108,10 +136,11 @@ const Login = () => {
         e.preventDefault();
         setErrorMessage('');
 
+        if (birthDateError || phoneError) return;
+
         try {
             await handleRegister(name, lastName, correo, contrasena, birthDate, phone);
         } catch (error) {
-            console.error('Registro fallido:', error);
             setErrorMessage('Error al registrar el usuario. Inténtalo de nuevo.');
         }
     };
@@ -119,6 +148,7 @@ const Login = () => {
     const handleContrasenaVisibility = () => {
         setContrasenaVisible(prev => !prev);
     };
+
 
     return (
         <main className="main">
@@ -140,29 +170,44 @@ const Login = () => {
                     {!isAdditionalInfoView && (
                         <form className={`formulario__login ${isRegisterView ? 'hidden' : ''}`} onSubmit={handleLoginSubmit}>
                             <h2>Iniciar sesión</h2>
-                            <input
-                                type="email"
-                                placeholder="Correo Electrónico"
+                            <TextField
+                                label="Correo Electrónico"
+                                variant='standard'
+                                size="small"
+                                margin='dense'
                                 value={correo}
-                                onChange={handleCorreoChange}
+                                onChange={(e) => setCorreo(e.target.value.slice(0, 35))} // Limita caracteres
+                                fullWidth
                                 required
+                                InputProps={{
+                                    style: { border: 'none' },
+                                }}
                             />
-                            {correoError && <p className="error-message">{correoError}</p>}
-                            <div className="password-container">
-                                <input
-                                    type={contrasenaVisible ? 'text' : 'password'}
-                                    placeholder="Contraseña"
-                                    value={contrasena}
-                                    onChange={handleContrasenaChange}
-                                    required
-                                />
-                                <span className="password-icon" onClick={handleContrasenaVisibility}>
-                                    {contrasenaVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                                </span>
-                            </div>
-                            {contrasenaError && <p className="error-message">{contrasenaError}</p>}
+                            <TextField
+                                label="Contraseña"
+                                variant='standard'
+                                size="small"
+                                margin='dense'
+                                type={contrasenaVisible ? 'text' : 'password'}
+                                value={contrasena}
+                                onChange={(e) => setContrasena(e.target.value.slice(0, 35))} // Limita caracteres
+                                fullWidth
+                                required
+                                InputProps={{
+                                    endAdornment: (
+                                        <IconButton onClick={handleContrasenaVisibility}>
+                                            <img
+                                                src={contrasenaVisible ? Images.icons.visibilityoff : Images.icons.visibility}
+                                                alt="toggle password visibility"
+                                                className='visibility-icon'
+                                            />
+                                        </IconButton>
+                                    ),
+                                    style: { border: 'none' },
+                                }}
+                            />
                             {errorMessage && <p className="error-message">{errorMessage}</p>}
-                            <button type="submit">Entrar</button>
+                            <button type="submit" className='login-button'>Entrar</button>
                             <p>
                                 <Link to="/RecoverPassword">¿Olvidaste tu contraseña?</Link>
                             </p>
@@ -172,66 +217,113 @@ const Login = () => {
                     {!isAdditionalInfoView && (
                         <form className={`formulario__register ${!isRegisterView ? 'hidden' : ''}`} onSubmit={handleRegisterSubmit}>
                             <h2>Registrarse</h2>
-                            <input
-                                type="text"
-                                placeholder="Nombre"
+                            <TextField
+                                label="Nombre"
+                                variant='standard'
+                                size="small"
+                                margin='dense'
                                 value={name}
                                 onChange={handleNameChange}
+                                error={!!nameError}
+                                helperText={nameError}
+                                fullWidth
                                 required
+                                InputProps={{
+                                    style: { border: 'none' },
+                                }}
                             />
-                            {nameError && <p className="error-message">{nameError}</p>}
-                            <input
-                                type="text"
-                                placeholder="Apellido"
+                            <TextField
+                                label="Apellido"
+                                variant='standard'
+                                size="small"
+                                margin='dense'
                                 value={lastName}
                                 onChange={handleLastNameChange}
+                                error={!!lastNameError}
+                                helperText={lastNameError}
+                                fullWidth
                                 required
+                                InputProps={{
+                                    style: { border: 'none' },
+                                }}
                             />
-                            {lastNameError && <p className="error-message">{lastNameError}</p>}
-                            <input
-                                type="email"
-                                placeholder="Correo"
+                            <TextField
+                                label="Correo Electrónico"
+                                variant='standard'
+                                size="small"
+                                margin='dense'
                                 value={correo}
                                 onChange={handleCorreoChange}
+                                error={!!correoError}
+                                helperText={correoError}
+                                fullWidth
                                 required
+                                InputProps={{
+                                    style: { border: 'none' },
+                                }}
                             />
-                            {correoError && <p className="error-message">{correoError}</p>}
-                            <div className="password-container">
-                                <input
-                                    type={contrasenaVisible ? 'text' : 'password'}
-                                    placeholder="Contraseña"
-                                    value={contrasena}
-                                    onChange={handleContrasenaChange}
-                                    required
-                                />
-                                <span className="password-icon" onClick={handleContrasenaVisibility}>
-                                    {contrasenaVisible ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                                </span>
-                            </div>
-                            {contrasenaError && <p className="error-message">{contrasenaError}</p>}
-                            <button type="submit">Continuar</button>
+                            <TextField
+                                label="Contraseña"
+                                variant='standard'
+                                size="small"
+                                margin='dense'
+                                type={contrasenaVisible ? 'text' : 'password'}
+                                value={contrasena}
+                                onChange={handleContrasenaChange}
+                                error={!!contrasenaError}
+                                helperText={contrasenaError}
+                                fullWidth
+                                required
+                                InputProps={{
+                                    endAdornment: (
+                                        <IconButton onClick={handleContrasenaVisibility}>
+                                            <img
+                                                src={contrasenaVisible ? Images.icons.visibilityoff : Images.icons.visibility}
+                                                alt="toggle password visibility"
+                                                className='visibility-icon'
+                                            />
+                                        </IconButton>
+                                    ),
+                                    style: { border: 'none' },
+                                }}
+                            />
+                            {errorMessage && <p className="error-message">{errorMessage}</p>}
+                            <button type="submit" className='login-button'>Siguiente</button>
                         </form>
                     )}
 
                     {isAdditionalInfoView && (
-                        <form className="formulario__register" onSubmit={handleAdditionalInfoSubmit}>
+                        <form className="formulario__additional-info" onSubmit={handleAdditionalInfoSubmit}>
                             <h2>Información Adicional</h2>
-                            <input
+                            <TextField
+                                label="Fecha de Nacimiento"
+                                variant='standard'
+                                size="small"
+                                margin='dense'
                                 type="date"
-                                placeholder="Fecha de Nacimiento"
                                 value={birthDate}
-                                onChange={(e) => setBirthDate(e.target.value)}
+                                onChange={handleBirthDateChange}
+                                fullWidth
                                 required
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
-                            <input
-                                type="tel"
-                                placeholder="Número de Teléfono"
+                            <TextField
+                                label="Teléfono"
+                                variant='standard'
+                                size="small"
+                                margin='dense'
                                 value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
+                                onChange={handlePhoneChange}
+                                fullWidth
                                 required
+                                InputProps={{
+                                    style: { border: 'none' },
+                                }}
                             />
                             {errorMessage && <p className="error-message">{errorMessage}</p>}
-                            <button type="submit">Finalizar Registro</button>
+                            <button type="submit" className='login-button'>Registrar</button>
                         </form>
                     )}
                 </div>

@@ -151,6 +151,16 @@ register: async (nombre, apellido, correo, contrasena, fecha_nacimiento, telefon
             throw AuthService.handleError(error, 'Token inválido o expirado.');
         }
     },
+
+    updateUser: async (id_usuarios, updatedData) => {
+    try {
+        const response = await api.put(`/usuarios/${id_usuarios}`, updatedData);
+        return response.data;  // Devuelve los datos del usuario actualizados
+    } catch (error) {
+        throw AuthService.handleError(error, 'No se pudo actualizar el usuario.');
+    }
+},
+
 };
 
 export default AuthService;

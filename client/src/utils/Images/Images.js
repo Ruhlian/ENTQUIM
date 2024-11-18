@@ -53,6 +53,8 @@ import personSelected from '../../assets/icons/person-selected.png';
 import personUnselected from '../../assets/icons/person-unselected.png';
 import paymentsSelected from '../../assets/icons/payments-selected.png';
 import paymentsUnselected from '../../assets/icons/payments-unselected.png';
+import activeDelete from '../../assets/icons/active-delete.png';
+import unactiveDelete from '../../assets/icons/unactive-delete.png';
 
 const Images = {
     plagues: {
@@ -98,7 +100,9 @@ const Images = {
         personselected: personSelected,
         personunselected: personUnselected,
         paymentsselected: paymentsSelected,
-        paymentsunselected: paymentsUnselected
+        paymentsunselected: paymentsUnselected,
+        activedelete: activeDelete,
+        unactiveDelete: unactiveDelete
     },
     homeCarousel: {
         img1: img1Carousel,

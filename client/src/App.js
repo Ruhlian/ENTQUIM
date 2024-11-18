@@ -15,7 +15,7 @@ import Contact from './pages/Contact/Contact';
 import Login from './pages/Login/Login';
 import AllProducts from './pages/AllProducts/AllProducts';
 import AccountInfo from './pages/Account/Account';
-import Payment from './pages/Payment/Payment';
+import Methods from './pages/Methods/Methods';
 import AddMethodForm from './pages/AddMethodForm/AddMethodForm';
 import CartPage from './pages/CartPage/CartPage'; // Importa CartPage
 import { AuthProvider } from './context/AuthContext';
@@ -87,7 +87,7 @@ function App() {
 
                         <Route path='/gestion-cuenta/pagos' exact element={
                             <ManagementLayout>
-                                <Payment />
+                                <Methods />
                             </ManagementLayout>
                         } />
 

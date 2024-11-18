@@ -2,7 +2,9 @@ const MetodoPago = require('../models/paymentMethod');
 
 class MetodoPagoController {
     static getAllPaymentMethodsByUserId(req, res) {
-        const userId = req.userId;  // Extrae el userId desde el middleware
+        const userId = req.user.id; // Accedemos al id del usuario desde req.user
+        console.log("User ID from token:", userId); // Registro para verificar el userId
+
         MetodoPago.getAllPaymentMethodsByUserId(userId, (err, results) => {
             if (err) return res.status(500).json({ error: err.message });
             res.json(results);
@@ -12,8 +14,10 @@ class MetodoPagoController {
     static createPaymentMethod(req, res) {
         const paymentData = {
             ...req.body,
-            id_usuarios: req.userId
+            id_usuarios: req.user.id  // Asignamos el ID del usuario autenticado
         };
+
+        console.log("Payment Data:", paymentData); // Registro para verificar los datos enviados
 
         if (!paymentData.numero_tarjeta || paymentData.numero_tarjeta.length !== 16) {
             return res.status(400).json({ error: 'Número de tarjeta inválido.' });
@@ -35,4 +39,3 @@ class MetodoPagoController {
 }
 
 module.exports = MetodoPagoController;
-
