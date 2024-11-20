@@ -31,13 +31,13 @@
     align-items: center;
     gap: 70px;
     padding-right: 100px;
-    border-right: #000 1px solid;
+    border-right: #00000063 1px solid;
     transition: border-right-height 0.3s ease, height 0.3s ease; /* Transición para la altura y el borde */
 }
 
 .sections-header__container.expanded {
     height: 90px;
-    border-right: #000 1px solid;
+    border-right: #00000063 1px solid;
 }
 
 .sections-header__container a {
@@ -92,5 +92,11 @@
     cursor: pointer;
 }
 
-
-
+.cart-count {
+    background-color: #17a9AC;
+    color: white;
+    padding: 1px 5px;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 500;
+}

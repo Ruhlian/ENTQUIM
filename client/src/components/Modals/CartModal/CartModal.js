@@ -2,15 +2,14 @@
 import React, { useState, useMemo } from 'react';
 import './CartModal.css';
 import { useCart } from '../../../context/CartContext';
-import { useAuth } from '../../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Images from '../../../utils/Images/Images';
 
 const CartModal = ({ isOpen, onClose }) => {
     const { cartItems = [], updateCartItemQuantity, removeFromCart, clearCart } = useCart() ?? {};
-    const { user } = useAuth();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+    const [loading] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
 
     const handleClose = () => {
@@ -46,11 +45,16 @@ const CartModal = ({ isOpen, onClose }) => {
         <div className={`modal ${isOpen ? 'show' : ''} ${isAnimating ? 'close-animation' : ''}`} onClick={handleClose}>
             <div className={`modal__content ${isAnimating ? 'close' : ''}`} onClick={handleModalClick}>
                 <div className="cart__header">
-                    <h3 className='cart__articles'>Artículos: {totalItems}</h3>
-                    <button className="cart__clear" onClick={clearCart}>Vaciar Carrito</button>
+                    <h3 className='cart__articles'>Productos: {totalItems}</h3>
+                    <img className="cart__clear" 
+                         onClick={clearCart} 
+                         src={Images.icons.activedelete} 
+                         alt='Vaciar el Carrito'
+                         title='Vaciar el Carrito'
+                         ></img>
                 </div>
                 {cartItems.length > 0 ? (
-                    <>
+                    <div className='cart__list-container'>
                         <ul className="cart__list">
                             {cartItems.map((item) => (
                                 <li key={item.id_producto} className="cart__item">
@@ -58,14 +62,40 @@ const CartModal = ({ isOpen, onClose }) => {
                                     <div className="cart__details">
                                         <h3 className="cart__name">{item.nombre}</h3>
                                         <p className="cart-price">${item.precio.toFixed(3)}</p>
-                                        <div className="cart__quantity">
-                                            <label>Cantidad:</label>
+                                        <div className="cart__quantity" data-quantity={item.quantity}>
+                                            {/* Botón para reducir cantidad */}
+                                            {item.quantity > 1 ? (
+                                                <button 
+                                                    className="cart__decrease" 
+                                                    onClick={() => handleQuantityChange(item.id_producto, item.quantity - 1)}
+                                                >
+                                                    -
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    className="cart__delete-product" 
+                                                    onClick={() => removeFromCart(item.id_producto)}
+                                                >
+                                                    <img src={Images.icons.unactiveDelete} alt="Eliminar" className='delete-product-icon'/>
+                                                </button>
+                                            )}
+
+                                            {/* Input para la cantidad */}
                                             <input
                                                 type="number"
                                                 min="1"
                                                 value={item.quantity}
                                                 onChange={(e) => handleQuantityChange(item.id_producto, Number(e.target.value))}
+                                                className='cart__input-quantity'
                                             />
+
+                                            {/* Botón para incrementar cantidad */}
+                                            <button 
+                                                className="cart__increase" 
+                                                onClick={() => handleQuantityChange(item.id_producto, item.quantity + 1)}
+                                            >
+                                                +
+                                            </button>
                                         </div>
                                         <button className="cart__remove" onClick={() => removeFromCart(item.id_producto)}>
                                             Eliminar
@@ -84,9 +114,15 @@ const CartModal = ({ isOpen, onClose }) => {
                         >
                             {loading ? 'Cargando...' : 'Ir a carrito'}
                         </button>
-                    </>
+                    </div>
                 ) : (
-                    <p>El carrito está vacío.</p>
+                    <div className='empty-cart-container'>
+                        <p className='empty-cart-modal'>El carrito está vacío.</p>
+                        <Link to={'/Productos/Todos'}><img alt=''
+                                                           src={Images.icons.greenaddcart}
+                                                           title='Ir a productos'
+                                                           className='add-products-cart-img'></img></Link>
+                    </div>
                 )}
             </div>
         </div>

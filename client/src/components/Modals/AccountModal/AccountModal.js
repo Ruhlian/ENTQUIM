@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext'; 
 import { toast } from 'react-toastify'; 
 import './AccountModal.css';
+import Images from '../../../utils/Images/Images';
 
 const AccountModal = ({ isOpen, onClose }) => {
     const navigate = useNavigate();
@@ -34,13 +35,22 @@ const AccountModal = ({ isOpen, onClose }) => {
                         <h2 className="welcome-account">Bienvenido, {user?.nombre || 'Usuario'}</h2>
                         <p className="account-mail">{user?.correo || 'No disponible'}</p>
                         <div className="account-management">
-                            <div className="management">Gestión de cuenta</div>
+                            <div className="management">
                             <button className="manage-button" onClick={handleManageAccount}>
                                 Ir a Gestionar Cuenta
                             </button>
+                            </div>
+                            
+                            <div className='modal-logout-container'>
                             <button className="logout-button" onClick={handleLogoutClick}>
                                 Cerrar sesión
+                                <img src={Images.icons.redlogout}
+                                     className='modal-logout-button'
+                                     alt=''
+                                     title=''
+                                ></img>
                             </button>
+                            </div>
                         </div>
                     </>
                 ) : (

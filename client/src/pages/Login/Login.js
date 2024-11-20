@@ -24,7 +24,7 @@ const Login = () => {
     const [lastNameError, setLastNameError] = useState('');
     const [phoneError, setPhoneError] = useState('');
     const [birthDateError, setBirthDateError] = useState('');
-    const [isRegistered, setIsRegistered] = useState(false);
+    const [setIsRegistered] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {

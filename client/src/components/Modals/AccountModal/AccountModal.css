@@ -3,13 +3,14 @@
     width: 90%; /* Ajuste para dispositivos móviles */
     max-width: 400px; /* Ancho máximo para pantallas más grandes */
     min-height: 200px; /* Aumenta la altura mínima para mayor comodidad */
-    max-height: 90vh; /* Altura máxima para evitar desbordamiento */
-    background-color: #fff;
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.842) 0%, rgba(255,255,255,1) 98%);
+    backdrop-filter: blur(10px);
     top: -100%; /* Inicialmente fuera de la pantalla */
     right: 0;
     z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
-    border-left: #000 1px solid;
-    border-bottom: #000 1px solid;
+    border-left: #00000063 1px solid; /* Borde izquierdo */
+    border-bottom: #00000063 1px solid; /* Borde inferior */
     border-bottom-left-radius: 15px;
     transition: top 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Animación de desplazamiento y opacidad */
     opacity: 0; /* Inicialmente invisible */
@@ -23,7 +24,7 @@
 
 .account-modal__content {
     position: relative;
-    margin-top: 40px;
+    margin-top: 20px;
     padding: 20px; /* Añade padding para mayor comodidad */
     display: flex;
     flex-direction: column;
@@ -34,7 +35,9 @@
     letter-spacing: 1px;
     font-size: 24px; /* Ajusta el tamaño de la fuente */
     color: #333; /* Color de texto más oscuro para mejor legibilidad */
-    margin-bottom: 10px; /* Añade espacio debajo */
+    margin-bottom: 5px; /* Añade espacio debajo */
+    font-weight: 600;
+    margin-top: 10px;
 }
 
 .account-mail {
@@ -44,7 +47,6 @@
 }
 
 .account-management {
-    margin-top: 15px;
     width: 100%; /* Asegúrate de que ocupe todo el ancho disponible */
 }
 
@@ -54,12 +56,11 @@
     font-weight: 500;
     border-bottom: #0000002c 1px solid;
     padding-bottom: 10px; /* Añade espacio inferior */
-    margin-top: 4px;
+    margin-top: 20px;
 }
 
 .logout-button, .login-button, .manage-button {
-    margin-top: 20px; /* Reduce el espacio superior para mayor cercanía */
-    padding: 10px 15px; /* Ajusta el padding para un botón más compacto */
+    margin-top: 10px; 
     width: 100%; /* Asegúrate de que los botones ocupen todo el ancho disponible */
     border: none;
     border-radius: 5px;
@@ -68,13 +69,22 @@
     transition: background-color 0.3s, transform 0.2s; /* Transición suave para el color de fondo y transformación */
 }
 
+
 .logout-button {
-    background-color: rgb(212, 0, 0);
-    color: #fff;
+    background-color: transparent;
+    color: #be0000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.modal-logout-button {
+    width: 24px;
 }
 
 .logout-button:hover {
-    background-color: rgb(156, 0, 0);
     transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
 }
 
@@ -89,11 +99,11 @@
 }
 
 .manage-button {
-    background-color: #14A2C9; /* Color de fondo similar al botón de iniciar sesión */
-    color: #fff; /* Color de texto blanco */
+    background-color: transparent; 
+    color: #000; /* Color de texto blanco */
+    padding: 5px 0;
 }
 
 .manage-button:hover {
-    background-color: #0a7f99; /* Color de hover más oscuro */
     transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
 }

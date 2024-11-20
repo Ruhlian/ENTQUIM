@@ -55,6 +55,8 @@ import paymentsSelected from '../../assets/icons/payments-selected.png';
 import paymentsUnselected from '../../assets/icons/payments-unselected.png';
 import activeDelete from '../../assets/icons/active-delete.png';
 import unactiveDelete from '../../assets/icons/unactive-delete.png';
+import addCart from '../../assets/icons/green-add-cart.png';
+import redLogout from '../../assets/icons/red-logout.png';
 
 const Images = {
     plagues: {
@@ -102,7 +104,9 @@ const Images = {
         paymentsselected: paymentsSelected,
         paymentsunselected: paymentsUnselected,
         activedelete: activeDelete,
-        unactiveDelete: unactiveDelete
+        unactiveDelete: unactiveDelete,
+        greenaddcart: addCart,
+        redlogout: redLogout
     },
     homeCarousel: {
         img1: img1Carousel,

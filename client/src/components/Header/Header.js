@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import './Header.css';
 import { Link, useLocation } from 'react-router-dom';
 import Images from '../../utils/Images/Images';
-import AccountModal from '../Modals/AccountModal/AccountModal'; // Descomentar esta línea para importar AccountModal
-import CartModal from '../Modals/CartModal/CartModal'
+import AccountModal from '../Modals/AccountModal/AccountModal'; 
+import CartModal from '../Modals/CartModal/CartModal';
+import { useCart } from '../../context/CartContext'; // Importa el contexto del carrito
 
 const Header = () => {
     const [isCartModalOpen, setIsCartModalOpen] = useState(false);
     const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isHeaderExpanded, setIsHeaderExpanded] = useState(false);
+
+    const { cartItems } = useCart(); // Usa el contexto del carrito
     const location = useLocation();
     const path = location.pathname;
 
@@ -29,7 +32,7 @@ const Header = () => {
                 }, 100);
             }, 150);
         } else {
-            closeModals(); // Cierra la otra modal si está abierta
+            closeModals(); 
             setIsHeaderExpanded(true);
             setTimeout(() => {
                 setIsCartModalOpen(true);
@@ -49,7 +52,7 @@ const Header = () => {
                 }, 100);
             }, 150);
         } else {
-            closeModals(); // Cierra la otra modal si está abierta
+            closeModals();
             setIsHeaderExpanded(true);
             setTimeout(() => {
                 setIsAccountModalOpen(true);
@@ -61,6 +64,9 @@ const Header = () => {
     const closeCartModal = () => {
         setIsCartModalOpen(false);
     };
+
+    // Calcula el número total de productos en el carrito
+    const cartItemCount = cartItems.reduce((count, item) => count + item.quantity, 0);
 
     return (
         <header className="header">
@@ -78,8 +84,11 @@ const Header = () => {
 
                     <div className={`icons-header__container ${isHeaderExpanded ? 'expanded' : ''}`}>
                         <ul className="header__list">
-                            <li className="header__element">
+                            <li className="header__element header-cart-container">
                                 <img src={Images.icons.blackcart} alt="Carrito" className="cart" onClick={toggleCartModal} />
+                                {cartItemCount > 0 && (
+                                    <span className="cart-count">{cartItemCount}</span>
+                                )}
                             </li>
                             <li className="header__element">
                                 <img src={Images.icons.blackaccount} alt='Cuenta' className='account' onClick={toggleAccountModal} />
@@ -89,12 +98,10 @@ const Header = () => {
                 </div>
             </div>
 
-            {/* Aquí descomentamos el AccountModal para hacerlo visible */}
             <AccountModal isOpen={isAccountModalOpen} onClose={toggleAccountModal} />
-                        {/* Modal del carrito */}
-                        <CartModal isOpen={isCartModalOpen} onClose={closeCartModal} />
+            <CartModal isOpen={isCartModalOpen} onClose={closeCartModal} />
         </header>
     );
-}
+};
 
 export default Header;
