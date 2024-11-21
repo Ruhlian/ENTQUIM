@@ -22,6 +22,8 @@ import AddMethodForm from './pages/AddMethodForm/AddMethodForm';
 import CartPage from './pages/CartPage/CartPage';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
+import ChangePassword from './pages/ChangePassword/ChangePassword';
 
 // Componente para manejar la barra de carga
 function LoadingBarWrapper({ children }) {
@@ -67,7 +69,9 @@ function App() {
                             <Route path='/gestion-cuenta/pagos' exact element={<ManagementLayout><Methods /></ManagementLayout>} />
                             <Route path='/gestion-cuenta/mis-ordenes' exact element={<ManagementLayout><Orders /></ManagementLayout>} />
                             <Route path='/gestion-cuenta/pagos/nuevo-metodo' exact element={<ManagementLayout><AddMethodForm /></ManagementLayout>} />
-                        </Routes>
+                            <Route path='/restablecer-contraseña' exact element={<Layout><ResetPasswordPage /></Layout>} />
+                            <Route path='/actualizar-contraseña' exact element={<Layout><ChangePassword /></Layout>} />
+                         </Routes>
                     </LoadingBarWrapper>
                 </CartProvider>
             </AuthProvider>
