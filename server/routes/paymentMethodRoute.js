@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const MetodoPagoController = require('../controllers/paymentMethod');
-const authMiddleware = require('../middlewares/auth');
+const MetodoPagoController = require('../controllers/paymentMethodController');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 // Rutas protegidas con authMiddleware
 router.get('/user', authMiddleware, MetodoPagoController.getAllPaymentMethodsByUserId);

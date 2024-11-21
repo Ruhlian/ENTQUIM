@@ -43,6 +43,7 @@ npm install body-parser
 npm install mysql2
 npm install express-validator
 npm install multer
+npm install react-top-loading-bar
 
 
 EN WORKBENCH:

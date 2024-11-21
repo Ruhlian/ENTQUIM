@@ -1,10 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path'); // Importar el módulo 'path'
-const usuariosR = require('./routes/users'); // Ruta para usuarios
-const productosR = require('./routes/products'); // Ruta para productos
-const contactR = require('./routes/contact'); // Ruta para contacto
-const metodoPagoR = require('./routes/paymentMethod'); // Ruta para métodos de pago
+const usuariosR = require('./routes/usersRoute'); // Ruta para usuarios
+const productosR = require('./routes/productsRoute'); // Ruta para productos
+const contactR = require('./routes/contactRoute'); // Ruta para contacto
+const metodoPagoR = require('./routes/paymentMethodRoute'); // Ruta para métodos de pago
+const ventasRoutes = require('./routes/soldsRoute');
 const cleanExpiredTokens = require('./scripts/tokenCleaner'); // Importar el limpiador de tokens
 require('dotenv').config(); // Cargar las variables de entorno
 
@@ -24,6 +25,7 @@ app.use('/api/usuarios', usuariosR); // Ruta de usuarios
 app.use('/api/productos', productosR); // Ruta de productos
 app.use('/api/contacto', contactR); // Ruta para enviar correos
 app.use('/api/metodos-pago', metodoPagoR); // Ruta para métodos de pago
+app.use('/api/ventas', ventasRoutes);
 
 // Manejo de errores 
 app.use((err, req, res, next) => {

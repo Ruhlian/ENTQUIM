@@ -54,15 +54,16 @@ const AccountModal = ({ isOpen, onClose }) => {
                         </div>
                     </>
                 ) : (
-                    <>
-                        <h2 className="login-prompt">Inicie sesión para acceder a su cuenta</h2>
-                        <button className="login-button" onClick={() => {
+                    <div className='login-prompt-container'>
+                        <h2 className="login-prompt">¡No has iniciado sesión!</h2>
+                        <p>Inicia sesión o Registrate para hacer tu compra.</p>
+                        <button className="login-button-modal" onClick={() => {
                             onClose();
                             navigate('/Iniciar-Sesion');
                         }}>
                             Iniciar sesión
                         </button>
-                    </>
+                    </div>
                 )}
             </div>
         </div>

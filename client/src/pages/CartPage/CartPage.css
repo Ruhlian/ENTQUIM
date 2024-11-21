@@ -1,395 +1,203 @@
-/* Título fuera del contenedor del carrito */
-.cart-title {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-
-/* Contenedor principal del carrito */
-.cart-container {
-  width: 90%;
-  max-width: 950px;
-  margin: 20px auto;
-  padding: 20px;
-  border: 2px solid #eaeef0;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.cart-page {
+  padding: 50px 20px;
+  background-color: #fcfcfc;
   display: flex;
-  flex-wrap: wrap;
   gap: 20px;
 }
 
-/* Estilo de cada columna (resumen y productos) */
-.cart-items, .cart-summary {
+.cart-title {
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.header-cart-container {
+  width: 100%;
+  min-height: 60px;
+  background-color: #fff;
+  border-bottom: solid 1px #0000001f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-cart-container p {
+  font-size: 18px;
+}
+
+.cart-container {
+  background-color: #fff;
+  padding: 20px;
+  width: 75%;
+  border: 1px solid #1A729A25;
+  border-radius: 5px;
+}
+
+.cart-items {
+  margin-top: 20px;
+}
+
+.cart-item-info {
+  width: 85%;
+}
+
+.cart-item-info div{
+  display: flex;
+}
+
+.cart-item-description {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin-left: 20px;
+}
+
+.cart-item-description-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-item-description-container h3 {
+  font-size: 23px;
+  font-weight: 600;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #00000010;
+  min-height: 250px;
+}
+
+.cart-item-img {
+  max-width: 150px;
+}
+
+.cart-item-total {
+  /* background-color: red; */
+  width: 15%;
+  max-width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quantity-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #1a719a48;
+  border-radius: 15px;
+}
+
+.quantity-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.quantity-btn:hover {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+}
+
+/* .delete-icon {
+  border: 1px solid #FDCECE;
+  background-color: #FFF0F0;
+} */
+
+.delete-icon img {
+  width: 16px;
+  height: 16px;
+}
+
+.quantity-value {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.remove-link {
+  background: none;
+  border: none;
+  border-left: 1px solid #00000067;
+  padding-left: 15px;
+  color: #be0e0e;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  margin-left: 10px;
+  transition: color 0.3s;
+  font-weight: 500;
+}
+
+.remove-link:hover {
+  color: #9b0202;
+}
+
+.cart-summary {
+  background-color: #fff;
+  border: 1px solid #1A729A25;
+  border-radius: 5px;
+  width: 25%;
+  padding: 15px;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.cart-summary div {
+  width: 100%;
+}
+
+.cart-summary-subtotal {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.checkout-btn {
+  width: 80%;
+  border-radius: 25px;
+  padding: 7px;
+  border: none;
+  background-color: #1A729A;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.checkout-btn:hover {
+  border: 1px solid #1a719a2f;
+  background-color: #fff;
+  color: #1A729A;
+}
+
+.payment-options-options {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.cart-summary {
-  flex-basis: 30%;
-  min-width: 200px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-.cart-items {
-  flex-grow: 1;
-}
-
-/* Estilos de las filas de los productos */
-.cart-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-.cart-item-info {
-  display: flex;
-  align-items: center;
-}
-
-.item-price {
-  font-weight: bold;
-}
-
-/* Contenedor de los botones de cantidad */
-.quantity-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 5px 15px;
-  background-color: #fff;
-  gap: 15px;
-  width: 80px;
-  height: 30px;
-}
-
-/* Estilo para los botones de cantidad */
-.quantity-container button {
-  background-color: transparent;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  padding: 2px 4px;
-  cursor: pointer;
-}
-
-.remove-btn {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 8px;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-/* Resumen de pedido */
-.cart-summary h3 {
-  margin-bottom: 10px;
-}
-
-.checkout-btn,
-.clear-btn {
-  display: inline-block;
-  width: 48%;
-  padding: 12px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  margin: 10px 1%;
-  font-size: 16px;
-}
-
-.checkout-btn {
-  background-color: #4caf50;
-  color: white;
-}
-
-.clear-btn {
-  background-color: #f44336;
-  color: white;
-}
-
-.checkout-btn:hover {
-  background-color: #45a049;
-}
-
-.clear-btn:hover {
-  background-color: #d32f2f;
-}
-
-/* Estilos del carrito vacío */
-.empty-cart {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-size: 18px;
-  color: #777;
-  margin-top: 20px;
-}
-
-.empty-cart p {
-  margin-bottom: 15px;
-}
-
-.empty-cart .shop-btn {
-  margin-top: 10px;
-}
-
-.payment-options {
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  width: 100%;
-  max-width: 500px;
-  margin-top: 30px;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Título */
-.payment-options h3 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #4f4f4f;
-  text-align: center;
-}
-
-/* Estilos de los botones de pago */
-
-/* body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f7fc;
-  color: #333;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-} */
-
-.payment-options label {
-  display: block;
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #555;
-  cursor: pointer;
-  transition: color 0.3s ease;
-}
-
-.payment-options label:hover {
-  color: #007bff;
-}
-
-.payment-options input[type="radio"] {
-  margin-right: 10px;
-  accent-color: #007bff;
-}
-
-.payment-options .form-group {
-  margin-bottom: 20px;
-}
-
-/* Formulario */
-.payment-options form {
-  display: flex;
-  flex-direction: column;
-}
-
-.payment-options input[type="text"] {
-  font-size: 16px;
-  padding: 12px;
-  margin: 10px 0;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  transition: border-color 0.3s ease;
-}
-
-.payment-options input[type="text"]:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
-/* Botón de envío */
-.payment-options button {
-  background-color: #007bff;
-  color: white;
-  font-size: 18px;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.payment-options button:hover {
-  background-color: #0056b3;
-}
-
-/* Mensaje de alerta */
-.alert {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 15px;
-  margin-top: 20px;
-  border-radius: 8px;
-  border: 1px solid #f5c6cb;
-  text-align: center;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-  .payment-options {
-    width: 90%;
-    padding: 20px;
-  }
-
-  .payment-options h3 {
-    font-size: 20px;
-  }
-
-  .payment-options label {
-    font-size: 14px;
-  }
-
-  .payment-options input[type="text"] {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .payment-options button {
-    font-size: 16px;
-    padding: 10px;
-  }
-}
-
-/* Estilos del formulario de tarjeta de crédito */
-.credit-card-form,
-.delivery-form {
-  margin-top: 20px;
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-.credit-card-form h4,
-.delivery-form h4 {
-  margin-bottom: 15px;
-  color: #333;
-  font-size: 18px;
-}
-
-.credit-card-form div,
-.delivery-form div {
-  margin-bottom: 15px;
-}
-
-.credit-card-form label,
-.delivery-form label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #555;
-}
-
-.credit-card-form input,
-.delivery-form input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.credit-card-form input::placeholder,
-.delivery-form input::placeholder {
-  color: #aaa;
-}
-
-.credit-card-form button,
-.delivery-form button {
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 10px;
-}
-
-.credit-card-form button:hover,
-.delivery-form button:hover {
-  background-color: #45a049;
-}
-
-/* Botón de la opción de ver productos */
-.shop-btn {
-  background-color: #2d90be;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 5px;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-.shop-btn:hover {
-  background-color: #1e6b8f;
-}
-
-/* Media Queries para mejorar la responsividad */
-@media (max-width: 768px) {
-  .cart-container {
-    flex-direction: column;
-  }
-
-  .cart-summary {
-    width: 100%;
-  }
-
-  .cart-items {
-    width: 100%;
-  }
-
-  .checkout-btn,
-  .clear-btn {
-    width: 100%;
-  }
-
-  .alert {
-    position: fixed;
-    right: 20px;
-    top: 80px;
-    padding: 10px 20px;
-    background-color: rgba(255, 0, 0, 0.8);
-    color: white;
-    border-radius: 5px;
-    font-size: 16px;
-    z-index: 1000;
-  }
+.payment-options-options h3 {
+  font-weight: 500;
+  font-size: 22px;
 }

@@ -87,7 +87,7 @@
     list-style: none;
 }
 
-.cart, .account {
+.header-cart, .header-account {
     width: 40px;
     cursor: pointer;
 }
@@ -95,7 +95,7 @@
 .cart-count {
     background-color: #17a9AC;
     color: white;
-    padding: 1px 5px;
+    padding: 1px 7px;
     border-radius: 50%;
     font-size: 13px;
     font-weight: 500;

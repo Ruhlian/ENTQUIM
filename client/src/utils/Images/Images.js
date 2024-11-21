@@ -57,6 +57,7 @@ import activeDelete from '../../assets/icons/active-delete.png';
 import unactiveDelete from '../../assets/icons/unactive-delete.png';
 import addCart from '../../assets/icons/green-add-cart.png';
 import redLogout from '../../assets/icons/red-logout.png';
+import Delete from '../../assets/icons/delete.png';
 
 const Images = {
     plagues: {
@@ -106,7 +107,8 @@ const Images = {
         activedelete: activeDelete,
         unactiveDelete: unactiveDelete,
         greenaddcart: addCart,
-        redlogout: redLogout
+        redlogout: redLogout,
+        delete: Delete
     },
     homeCarousel: {
         img1: img1Carousel,

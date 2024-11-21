@@ -45,8 +45,8 @@ const login = async (req, res) => {
 
         // Generar un token que expire en 1 hora
         const token = jwt.sign(
-            { id: user.id_usuarios, rol: user.id_rol }, 
-            process.env.JWT_SECRET, 
+            { id: user.id_usuarios, correo: user.correo, rol: user.id_rol }, // Agregar correo aquí
+            process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );        
         const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // Expira en 1 hora

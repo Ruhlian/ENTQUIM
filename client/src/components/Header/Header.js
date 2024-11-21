@@ -84,14 +84,14 @@ const Header = () => {
 
                     <div className={`icons-header__container ${isHeaderExpanded ? 'expanded' : ''}`}>
                         <ul className="header__list">
-                            <li className="header__element header-cart-container">
-                                <img src={Images.icons.blackcart} alt="Carrito" className="cart" onClick={toggleCartModal} />
+                            <li className="header__element">
+                                <img src={Images.icons.blackcart} alt="Carrito" className="header-cart" onClick={toggleCartModal} />
                                 {cartItemCount > 0 && (
                                     <span className="cart-count">{cartItemCount}</span>
                                 )}
                             </li>
                             <li className="header__element">
-                                <img src={Images.icons.blackaccount} alt='Cuenta' className='account' onClick={toggleAccountModal} />
+                                <img src={Images.icons.blackaccount} alt='Cuenta' className='header-account' onClick={toggleAccountModal} />
                             </li>
                         </ul>
                     </div>

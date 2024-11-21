@@ -1,35 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./CartPage.css";
+import Images from '../../utils/Images/Images'
 
 const Cart = () => {
   const { cartItems, updateCartItemQuantity, removeFromCart, clearCart } = useCart();
   const { user } = useAuth();
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
-  const [creditCardDetails, setCreditCardDetails] = useState({
-    cardNumber: "",
-    cardName: "",
-    expirationDate: "",
-    cvv: "",
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const paymentOptionsRef = useRef(null);
+  const [deliveryDetails] = useState({
+    deliveryName: user?.nombre || "",
+    deliveryAddress: user?.direccion || "",
   });
-  const [deliveryDetails, setDeliveryDetails] = useState({
-    deliveryName: "",
-    deliveryAddress: "",
-  });
-  const [errors, setErrors] = useState({
-    cardNumber: "",
-    cardName: "",
-    expirationDate: "",
-    cvv: "",
-    deliveryName: "",
-    deliveryAddress: "",
-  });
-  const [alertMessage, setAlertMessage] = useState("");
-  const [showAlert, setShowAlert] = useState(false);
 
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.precio * item.quantity,
@@ -45,105 +33,111 @@ const Cart = () => {
       return;
     }
     setShowPaymentOptions(true);
+    setTimeout(() => {
+      paymentOptionsRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100); // Asegura que la vista de métodos de pago esté renderizada antes del scroll
   };
-
+  
   const handlePaymentMethodChange = (e) => {
-    setSelectedPaymentMethod(e.target.value);
-  };
-
-  const validateField = (name, value) => {
-    let errorMessage = "";
-    if (name === "cardNumber") {
-      if (!/^\d{16}$/.test(value)) {
-        errorMessage =
-          "El número de la tarjeta solo puede contener números y debe tener 16 dígitos.";
-      }
-    } else if (name === "cardName") {
-      if (!/^[a-zA-Z\s]+$/.test(value)) {
-        errorMessage = "El nombre en la tarjeta solo puede contener letras y espacios.";
-      }
-    } else if (name === "expirationDate") {
-      if (!/^\d{2}\/\d{2}$/.test(value)) {
-        errorMessage = "La fecha de vencimiento debe estar en el formato MM/AA.";
-      }
-    } else if (name === "cvv") {
-      if (!/^\d{3}$/.test(value)) {
-        errorMessage = "El CVV debe contener exactamente 3 dígitos.";
-      }
-    } else if (name === "deliveryName") {
-      if (!/^[a-zA-Z\s]+$/.test(value)) {
-        errorMessage = "El nombre de entrega solo puede contener letras y espacios.";
-      }
-    } else if (name === "deliveryAddress") {
-      if (!value) {
-        errorMessage = "La dirección de entrega es requerida.";
-      }
-    }
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMessage }));
-    if (errorMessage) {
-      setAlertMessage(errorMessage);
-      setShowAlert(true);
-    } else {
-      setShowAlert(false);
+    const selectedMethod = e.target.value;
+    setSelectedPaymentMethod(selectedMethod);
+  
+    // Asegurar que el área de métodos de pago permanezca abierta
+    if (selectedMethod === "creditCard" || selectedMethod === "cashOnDelivery") {
+      setShowPaymentOptions(true);
     }
   };
+  
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    if (selectedPaymentMethod === "creditCard") {
-      setCreditCardDetails({ ...creditCardDetails, [name]: value });
-    } else if (selectedPaymentMethod === "cashOnDelivery") {
-      setDeliveryDetails({ ...deliveryDetails, [name]: value });
+  useEffect(() => {
+    const fetchPaymentMethods = async () => {
+      try {
+        const response = await fetch("http://localhost:3002/api/metodos-pago/user", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (response.ok) {
+          const methods = await response.json();
+          setPaymentMethods(methods);
+        } else {
+          console.error("Error al obtener métodos de pago.");
+        }
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+      }
+    };
+
+    if (user) {
+      fetchPaymentMethods();
     }
-    validateField(name, value);
-  };
+  }, [user]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    let valid = true;
-
-    if (selectedPaymentMethod === "creditCard") {
-      Object.keys(creditCardDetails).forEach((field) =>
-        validateField(field, creditCardDetails[field])
-      );
-    } else if (selectedPaymentMethod === "cashOnDelivery") {
-      Object.keys(deliveryDetails).forEach((field) =>
-        validateField(field, deliveryDetails[field])
-      );
-    }
-
-    // Verifica si hay errores
-    if (!Object.values(errors).every((error) => error === "")) {
-      toast.error("Por favor, corrige los errores antes de continuar.", {
+  const handleFinalizePurchase = async () => {
+    if (!selectedPaymentMethod) {
+      toast.error("Por favor seleccione un método de pago", {
         position: "top-center",
         autoClose: 3000,
       });
-      valid = false;
+      return;
     }
-
-    if (valid) {
-      if (selectedPaymentMethod === "creditCard") {
-        console.log("Datos de la tarjeta: ", creditCardDetails);
-        toast.success("Pago realizado con éxito.", {
+  
+    const ventaData = {
+      fecha: new Date().toISOString().split("T")[0], // Fecha en formato YYYY-MM-DD
+      total: subtotal,
+      estado: "pendiente", // Puedes ajustar el estado según la lógica de tu negocio
+      metodo_pago: selectedPaymentMethod === "cashOnDelivery" ? "CONTRA_ENTREGA" : "TARJETA",
+      id_metodo_pago: selectedPaymentMethod !== "cashOnDelivery" ? selectedPaymentMethod : null,
+      correo: user?.correo || "", // Añade el correo del usuario logueado
+      detalles: cartItems.map((item) => ({
+        id_producto: item.id_producto,
+        cantidad: item.quantity,
+        precio_Unitario: item.precio,
+      })),
+    };
+  
+    try {
+      const response = await fetch("http://localhost:3002/api/ventas/con-detalles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(ventaData),
+      });
+  
+      if (response.ok) {
+        toast.success("Venta finalizada exitosamente", {
           position: "top-center",
           autoClose: 3000,
         });
-      } else if (selectedPaymentMethod === "cashOnDelivery") {
-        console.log("Detalles de entrega: ", deliveryDetails);
-        toast.success("Pedido realizado con éxito para entrega.", {
+        clearCart(); // Vacía el carrito después de finalizar la compra
+      } else {
+        const errorData = await response.json();
+        toast.error(`Error: ${errorData.error || "Error al finalizar la venta"}`, {
           position: "top-center",
           autoClose: 3000,
         });
       }
+    } catch (error) {
+      console.error("Error al finalizar la venta:", error);
+      toast.error("Error al procesar la venta. Intente nuevamente.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
     }
   };
+  
 
   return (
-    <div>
-      <h2 className="cart-title">Tu Carrito</h2>
-
+    <div className="cart-page">
       <div className="cart-container">
+        <div className="header-cart-container">
+          <h2 className="cart-title">Tu Carrito</h2>
+          <p>Precio unidades</p>
+        </div>
         {cartItems.length === 0 ? (
           <div className="empty-cart">
             <p>Tu carrito está vacío.</p>
@@ -158,63 +152,88 @@ const Cart = () => {
                 <div key={item.id_producto} className="cart-item">
                   <div className="cart-item-info">
                     <div>
-                      <h3>{item.nombre}</h3>
-                      <p className="item-price">
-                        COP {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
-                      </p>
-                      <div className="quantity-container">
-                        <button
-                          onClick={() =>
-                            item.quantity > 1
-                              ? updateCartItemQuantity(item.id_producto, item.quantity - 1)
-                              : null
-                          }
-                        >
-                          -
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button
-                          onClick={() => updateCartItemQuantity(item.id_producto, item.quantity + 1)}
-                        >
-                          +
-                        </button>
+                      <img src={item.imagen} alt={item.nombre} className="cart-item-img"></img>
+                      <div className="cart-item-description">
+                        <div className="cart-item-description-container">
+                          <h3>{item.nombre}</h3>
+                          <p className="item-price">
+                            COP {item.precio.toLocaleString('es-CO')}
+                          </p>
+                        </div>
+                        <div className="quantity-container">
+                          <div className="quantity-selector">
+                            {item.quantity === 1 ? (
+                              <button
+                                className="quantity-btn delete-icon"
+                                onClick={() => removeFromCart(item.id_producto)}
+                              >
+                                <img src={Images.icons.delete} alt="Eliminar" />
+                              </button>
+                            ) : (
+                              <button
+                                className="quantity-btn"
+                                onClick={() => updateCartItemQuantity(item.id_producto, item.quantity - 1)}
+                              >
+                                -
+                              </button>
+                            )}
+
+                            <span className="quantity-value">{item.quantity}</span>
+                            <button
+                              className="quantity-btn"
+                              onClick={() => updateCartItemQuantity(item.id_producto, item.quantity + 1)}
+                            >
+                              +
+                            </button>
+                          </div>
+                          <button
+                            className="remove-link"
+                            onClick={() => removeFromCart(item.id_producto)}
+                          >
+                            Eliminar del carrito
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div className="cart-item-total">
-                    <p>Total: COP {(item.precio * item.quantity).toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</p>
-                    <button
-                      className="remove-btn"
-                      onClick={() => removeFromCart(item.id_producto)}
-                    >
-                      Eliminar
-                    </button>
+                    <p>COP {(item.precio * item.quantity).toLocaleString('es-CO')}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="cart-summary">
-              <h3>Resumen del pedido</h3>
-              <p>Subtotal: COP {subtotal.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</p>
-              <p>Envío: Gratis</p>
-              <h3>Total: COP {subtotal.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h3>
-              <button className="checkout-btn" onClick={handleCheckout}>
-                Proceder a pagar
-              </button>
-            </div>
-
+            
             {showPaymentOptions && (
-              <div className="payment-options">
-                <div>
-                  <label>
-                    <input
-                      type="radio"
-                      value="creditCard"
-                      checked={selectedPaymentMethod === "creditCard"}
-                      onChange={handlePaymentMethodChange}
-                    />
-                    Tarjeta de crédito
-                  </label>
+              <div className="payment-options" ref={paymentOptionsRef}>
+                <div className="payment-options-options">
+                  {paymentMethods.length > 0 ? (
+                    <>
+                      <h3>Selecciona un método de pago:</h3>
+                      {paymentMethods.map((method) => (
+                          <label key={method.id_metodo_pago}>
+                            <input
+                              type="radio"
+                              value={method.id_metodo_pago}
+                              checked={selectedPaymentMethod === String(method.id_metodo_pago)}
+                              onChange={handlePaymentMethodChange}
+                            />
+                            **** {method.numero_tarjeta.slice(-4)} (Expira {method.mm_aa})
+                          </label>
+                        ))}
+
+                      <div className="add-method-cart">
+                        <Link to="/gestion-cuenta/pagos/nuevo-metodo">
+                          Añadir Método de Pago
+                        </Link>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="add-method-cart">
+                      <Link to="/gestion-cuenta/pagos/nuevo-metodo">
+                        Añadir Método de Pago
+                      </Link>
+                    </div>
+                  )}
                   <label>
                     <input
                       type="radio"
@@ -222,94 +241,30 @@ const Cart = () => {
                       checked={selectedPaymentMethod === "cashOnDelivery"}
                       onChange={handlePaymentMethodChange}
                     />
-                    Contra entrega
+                    Contra entrega (Dirección: {deliveryDetails.deliveryAddress || "No disponible"})
                   </label>
+
+                  <button className="finalize-btn" onClick={handleFinalizePurchase}>
+                  Finalizar venta
+                  </button>
                 </div>
-
-                {selectedPaymentMethod === "creditCard" && (
-                  <form onSubmit={handleSubmit}>
-                    <div>
-                      <label htmlFor="cardNumber">Número de tarjeta</label>
-                      <input
-                        type="text"
-                        id="cardNumber"
-                        name="cardNumber"
-                        placeholder="XXXX XXXX XXXX XXXX"
-                        value={creditCardDetails.cardNumber}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="cardName">Nombre en la tarjeta</label>
-                      <input
-                        type="text"
-                        id="cardName"
-                        name="cardName"
-                        placeholder="Nombre del titular"
-                        value={creditCardDetails.cardName}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="expirationDate">Fecha de vencimiento</label>
-                      <input
-                        type="text"
-                        id="expirationDate"
-                        name="expirationDate"
-                        placeholder="MM/AA"
-                        value={creditCardDetails.expirationDate}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="cvv">CVV</label>
-                      <input
-                        type="text"
-                        id="cvv"
-                        name="cvv"
-                        placeholder="XXX"
-                        value={creditCardDetails.cvv}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <button type="submit">Realizar pago</button>
-                  </form>
-                )}
-
-                {selectedPaymentMethod === "cashOnDelivery" && (
-                  <form onSubmit={handleSubmit}>
-                    <div>
-                      <label htmlFor="deliveryName">Nombre de entrega</label>
-                      <input
-                        type="text"
-                        id="deliveryName"
-                        name="deliveryName"
-                        placeholder="Nombre completo"
-                        value={deliveryDetails.deliveryName}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="deliveryAddress">Dirección de entrega</label>
-                      <input
-                        type="text"
-                        id="deliveryAddress"
-                        name="deliveryAddress"
-                        placeholder="Dirección completa"
-                        value={deliveryDetails.deliveryAddress}
-                        onChange={handleInputChange}
-                      />
-                    </div>
-                    <button type="submit">Confirmar entrega</button>
-                  </form>
-                )}
               </div>
             )}
           </>
         )}
       </div>
 
-      {showAlert && <div className="alert">{alertMessage}</div>}
+      <div className="cart-summary">
+        <div>
+        <p className="cart-summary-subtotal">
+          Subtotal (items): COP {subtotal.toLocaleString('es-CO')}
+        </p>
+        <p>Envío: Gratis</p>
+        </div>
+        <button className="checkout-btn" onClick={handleCheckout}>
+          Proceder a pagar
+        </button>
+      </div>
     </div>
   );
 };

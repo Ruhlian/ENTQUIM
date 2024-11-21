@@ -1,0 +1,92 @@
+.orders-page {
+    margin-left: 270px;
+}
+.orders-page {
+    padding: 20px;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+.order-card h3 {
+    margin: 0 0 10px 0;
+}
+
+.order-card p {
+    margin: 5px 0;
+}
+
+.order-card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.order-card li {
+    margin: 5px 0;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    text-align: left;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.close-button {
+    margin-top: 20px;
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    background-color: #c9302c;
+}
+
+.details-link {
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.details-link:hover {
+    color: #0056b3;
+}

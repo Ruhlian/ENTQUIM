@@ -59,7 +59,7 @@
     margin-top: 20px;
 }
 
-.logout-button, .login-button, .manage-button {
+.logout-button, .manage-button, .login-button-modal {
     margin-top: 10px; 
     width: 100%; /* Asegúrate de que los botones ocupen todo el ancho disponible */
     border: none;
@@ -88,14 +88,19 @@
     transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
 }
 
-.login-button {
-    background-color: #14A2C9;
-    color: #fff;
+.login-button-modal {
+    background-color: transparent;
+    color: #14A2C9;
+    font-size: 17px;
+    border: 1px solid #14a2c941;
+    padding: 5px;
+    transition: color 0.5s, background-color 0.5s, transform 0.5s;
 }
 
-.login-button:hover {
-    background-color: #0a7f99; /* Color de hover más oscuro para mejor contraste */
+.login-button-modal:hover {
+    background-color: #14a2c9a9; /* Color de hover más oscuro para mejor contraste */
     transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
+    color: #fff;
 }
 
 .manage-button {
@@ -106,4 +111,21 @@
 
 .manage-button:hover {
     transform: scale(1.05); /* Efecto de zoom al pasar el mouse */
+}
+
+.login-prompt-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-prompt {
+    font-weight: 600;
+}
+
+.login-prompt-container p {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    font-size: 14px;
 }

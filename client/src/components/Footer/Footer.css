@@ -1,6 +1,6 @@
 .footer {
     height: 500px; /* Altura del footer */
-    background-color: #f8f9fa; /* Color de fondo */
+    background-color: #fcfcfc; /* Color de fondo */
     padding: 40px 60px; /* Espacio interno */
     display: flex;
     justify-content: space-between; /* Distribuir los elementos a lo largo del eje horizontal */
