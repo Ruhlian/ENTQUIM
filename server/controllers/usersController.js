@@ -2,7 +2,6 @@ const connection = require('../config/conexion');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const tokenService = require('../models/tokens'); // Asegúrate de importar el servicio de token
-const crypto = require('crypto');
 const transporter = require('../config/nodemailer'); // Importa el transporter configurado
 
 // Obtener todos los usuarios
@@ -76,38 +75,46 @@ const login = async (req, res) => {
     });
 };
 
+// Verificar token del usuario para sus datos
 const verifyToken = async (req, res) => {
-    const token = req.headers['authorization']?.split(' ')[1]; // Obtiene solo el token
-
+    const token = req.headers['authorization']?.split(' ')[1]; // Obtiene el token del encabezado
+    
     if (!token) {
         return res.status(400).json({ error: 'Token requerido.' });
     }
 
     try {
-        // Verifica el token y decodifica los datos del usuario
-        const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+        const tokenData = await tokenService.verifyToken(token);
+        if (!tokenData) {
+            return res.status(401).json({ error: 'Token no válido o expirado.' });
+        }
 
-        const userId = decoded.id;
-
-        // Ahora realiza la consulta con el token correctamente extraído
-        const query = 'SELECT * FROM tokens_usuarios WHERE token = ?';
-        connection.query(query, [token], (error, results) => {
-            if (error) {
-                return res.status(500).json({ error: 'Error en la base de datos.' });
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ error: 'Token no válido.' });
             }
 
-            if (results.length === 0) {
-                return res.status(404).json({ error: 'Token no encontrado.' });
-            }
+            const userId = decoded.id;
 
-            res.json({
-                message: 'Token válido.',
-                user: results[0], // Devuelve los datos del usuario
+            // Obtiene los datos del usuario desde la base de datos
+            const query = 'SELECT * FROM Usuarios WHERE id_usuarios = ?';
+            connection.query(query, [userId], (error, results) => {
+                if (error) {
+                    return res.status(500).json({ error: 'Error en la base de datos.' });
+                }
+
+                if (results.length === 0) {
+                    return res.status(404).json({ error: 'Usuario no encontrado.' });
+                }
+
+                res.json({
+                    message: 'Token válido.',
+                    user: results[0], // Devuelve los datos del usuario
+                });
             });
         });
-    } catch (err) {
-        console.error('Error al verificar el token:', err.message);  // Agregar un log detallado del error
-        return res.status(401).json({ error: 'Token no válido.' });
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al verificar el token.' });
     }
 };
 
@@ -237,23 +244,24 @@ const deleteTokenById = async (req, res) => {
     }
 };
 
+// Invalida el token al cerrar sesión
 const invalidateToken = async (req, res) => {
-    const { token } = req.body; // Asumiendo que el token viene en el cuerpo de la solicitud
+    const token = req.body.token; // Asegúrate de que el token esté presente en el cuerpo de la solicitud
+
+    if (!token) {
+        return res.status(400).json({ error: 'Token requerido.' });
+    }
+
     try {
-        // Verificar si el token existe
-        const tokenData = await tokenService.verifyToken(token);
-        if (!tokenData) {
-            return res.status(404).json({ error: 'Token no encontrado' });
+        const result = await tokenService.invalidateToken(token); // Invalida el token en la base de datos
+
+        if (!result) {
+            return res.status(404).json({ error: 'Token no encontrado.' });
         }
 
-        // Invalidar (eliminar) el token de la base de datos
-        await tokenService.invalidateToken(token);
-
-        // Responder con un mensaje de éxito
-        return res.status(200).json({ message: 'Token invalidado correctamente' });
+        res.json({ message: 'Token invalidado exitosamente.' });
     } catch (error) {
-        console.error('Error al invalidar el token:', error);
-        return res.status(500).json({ error: 'Error al invalidar el token' });
+        return res.status(500).json({ error: 'Error al invalidar el token.' });
     }
 };
 
@@ -346,7 +354,6 @@ const updateUser = async (req, res) => {
         res.status(500).json({ error: 'Error en la base de datos.' });
     }
 };
-
 // Mapa para rastrear los tiempos de envío de correos (en memoria)
 const emailCooldown = new Map();
 

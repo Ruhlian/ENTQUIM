@@ -71,26 +71,57 @@ register: async (nombre, apellido, correo, contrasena, fecha_nacimiento, telefon
     }
 },
 
-   // Método en AuthService para invalidar el token
-invalidateToken: async (token) => {
-    console.log('Invalidando token:', token); // Verifica que el token sea correcto
+    // Método para invalidar el token
+    invalidateToken: async (token) => {
+        console.log('Invalidando token:', token);
 
-    if (!token) {
-        throw new Error('Token no proporcionado.');
-    }
-
-    try {
-        const response = await api.post('/usuarios/invalidate-token', { token });
-        if (response.status === 200) {
-            return response.data;
-        } else {
-            throw new Error('Error al invalidar el token');
+        // Validaciones previas
+        if (!token) {
+            throw new Error('Token no proporcionado.');
         }
+
+        try {
+            const response = await api.post('/usuarios/invalidate-token', { token });
+            console.log('Respuesta del servidor al invalidar token:', response);
+
+            if (response.status === 200) {
+                return response.data; // Retorna cualquier dato necesario
+            } else {
+                throw new Error('Error al invalidar el token');
+            }
+        } catch (error) {
+            console.error('Error al invalidar el token:', error);
+            throw AuthService.handleError(error, 'Error al invalidar el token');
+        }
+    },
+
+    // Método para verificar el token
+    verifyToken: async (token) => {
+        console.log('Verificando token:', token);
+
+        // Validaciones previas
+        if (!token) {
+            throw new Error('Token no proporcionado.');
+        }
+
+        try {
+            const response = await api.get('/usuarios/verify-token', { token }); // Cambiado a POST
+            console.log('Token verificado con éxito:', response);
+            return response.data; // Esto puede incluir información del usuario si es necesario
+        } catch (error) {
+            console.error('Error al verificar el token:', error);
+            throw AuthService.handleError(error, 'Token inválido o expirado.');
+        }
+    },
+
+    updateUser: async (id_usuarios, updatedData) => {
+    try {
+        const response = await api.put(`/usuarios/${id_usuarios}`, updatedData);
+        return response.data;  // Devuelve los datos del usuario actualizados
     } catch (error) {
-        console.error('Error al invalidar el token:', error.response || error.message);
-        throw AuthService.handleError(error, 'Error al invalidar el token');
+        throw AuthService.handleError(error, 'No se pudo actualizar el usuario.');
     }
-},    
+},   
 
 // solicitar correo
 requestPasswordReset: async (correo) => {
@@ -188,39 +219,6 @@ updatePassword: async (token, newPassword) => {
             return new Error('Error desconocido: ' + error.message);
         }
     },
-
-// Método para verificar el token
-verifyToken: async (token) => {
-    console.log('Verificando token:', token);
-
-    // Validaciones previas
-    if (!token) {
-        throw new Error('Token no proporcionado.');
-    }
-
-    try {
-        // Enviar el token en los encabezados
-        const response = await api.get('/usuarios/verify-token', {
-            headers: {
-                'Authorization': `Bearer ${token}`, // Agregar el token en los encabezados
-            },
-        });
-        console.log('Token verificado con éxito:', response);
-        return response.data; // Esto puede incluir información del usuario si es necesario
-    } catch (error) {
-        console.error('Error al verificar el token:', error);
-        throw AuthService.handleError(error, 'Token inválido o expirado.');
-    }
-},
-
-    updateUser: async (id_usuarios, updatedData) => {
-    try {
-        const response = await api.put(`/usuarios/${id_usuarios}`, updatedData);
-        return response.data;  // Devuelve los datos del usuario actualizados
-    } catch (error) {
-        throw AuthService.handleError(error, 'No se pudo actualizar el usuario.');
-    }
-},
 
 };
 
