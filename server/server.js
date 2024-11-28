@@ -13,8 +13,16 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET); // Para verificar que la var
 
 const app = express(); // Crear la aplicación Express
 
+// Configuración de CORS
+const corsOptions = {
+  origin: 'https://206f292e.entquim.pages.dev', // Tu dominio frontend
+  methods: 'GET, POST, PUT, DELETE, OPTIONS',
+  allowedHeaders: 'Content-Type, Authorization', // Encabezados permitidos
+};
+
+app.use(cors(corsOptions)); // Permitir CORS con opciones específicas
+
 // Middleware
-app.use(cors()); // Permitir CORS
 app.use(express.json()); // Analizar cuerpos JSON
 
 // Servir archivos estáticos desde la carpeta 'assets'
